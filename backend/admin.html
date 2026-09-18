@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Brew & Bliss — Admin</title>
+<style>
+  :root {
+    --brown: #4a2f22;
+    --brown-accent: #8a5a3b;
+    --cream: #faf5ef;
+    --card: #ffffff;
+    --border: #e6dccd;
+    --danger: #b3432e;
+    --ok: #3c7a4e;
+    --pending: #b3812e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--cream);
+    color: var(--brown);
+  }
+  header {
+    background: var(--brown);
+    color: var(--cream);
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header h1 { margin: 0; font-size: 1.25rem; }
+  header .api-base { font-size: 0.75rem; opacity: 0.7; }
+  #logoutBtn {
+    background: transparent; border: 1px solid rgba(255,255,255,0.4); color: var(--cream);
+    padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;
+  }
+  main { max-width: 1000px; margin: 0 auto; padding: 24px; }
+
+  /* Login screen */
+  #loginScreen {
+    max-width: 380px; margin: 80px auto; background: var(--card);
+    padding: 32px; border-radius: 12px; border: 1px solid var(--border);
+  }
+  #loginScreen h2 { margin-top: 0; }
+  #loginScreen input {
+    width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid var(--border);
+    border-radius: 8px; font-size: 0.95rem;
+  }
+  #loginScreen button, .btn {
+    background: var(--brown-accent); color: white; border: none; padding: 10px 16px;
+    border-radius: 8px; cursor: pointer; font-size: 0.95rem;
+  }
+  #loginScreen button:hover, .btn:hover { opacity: 0.9; }
+  #loginError { color: var(--danger); font-size: 0.85rem; min-height: 1.2em; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .tab {
+    padding: 8px 16px; border-radius: 20px; cursor: pointer; border: 1px solid var(--border);
+    background: var(--card); font-size: 0.9rem;
+  }
+  .tab.active { background: var(--brown); color: white; border-color: var(--brown); }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Stats row */
+  .stats-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+  .stat-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 20px; flex: 1; min-width: 140px;
+  }
+  .stat-card .label { font-size: 0.75rem; opacity: 0.65; text-transform: uppercase; letter-spacing: 0.04em; }
+  .stat-card .value { font-size: 1.5rem; font-weight: 600; margin-top: 4px; }
+
+  table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 10px; overflow: hidden; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+  th { background: #f3ece1; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; opacity: 0.7; }
+  input.editable-price {
+    width: 80px; padding: 5px 7px; border: 1px solid var(--border); border-radius: 6px;
+  }
+  select.status-select {
+    padding: 5px 7px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem;
+  }
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 600;
+  }
+  .badge.available { background: #e4f2e7; color: var(--ok); }
+  .badge.unavailable { background: #f4e4e0; color: var(--danger); }
+  .row-actions button {
+    border: none; background: none; cursor: pointer; font-size: 0.8rem; color: var(--brown-accent);
+    text-decoration: underline; padding: 0; margin-right: 10px;
+  }
+  .row-actions button.danger { color: var(--danger); }
+
+  #addItemForm {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px; margin-top: 20px; display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 10px; align-items: end;
+  }
+  #addItemForm label { display: block; font-size: 0.75rem; opacity: 0.65; margin-bottom: 4px; }
+  #addItemForm input, #addItemForm select {
+    width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px;
+  }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: var(--brown); color: white; padding: 10px 20px; border-radius: 8px;
+    font-size: 0.9rem; opacity: 0; transition: opacity 0.25s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+
+  .empty-state { text-align: center; padding: 40px; opacity: 0.6; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <h2>🍵 Brew &amp; Bliss — Admin</h2>
+  <label style="font-size:0.8rem; opacity:0.7;">Email</label>
+  <input id="loginEmail" type="email" placeholder="owner@brewandbliss.local" value="owner@brewandbliss.local">
+  <label style="font-size:0.8rem; opacity:0.7;">Password</label>
+  <input id="loginPassword" type="password" placeholder="Password">
+  <div id="loginError"></div>
+  <button onclick="login()" style="width:100%;">Log in</button>
+</div>
+
+<div id="app" style="display:none;">
+  <header>
+    <h1>🍵 Brew &amp; Bliss — Admin</h1>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <span class="api-base" id="apiBaseLabel"></span>
+      <button id="logoutBtn" onclick="logout()">Log out</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="tabs">
+      <div class="tab active" data-tab="menu" onclick="switchTab('menu')">Menu</div>
+      <div class="tab" data-tab="orders" onclick="switchTab('orders')">Orders</div>
+      <div class="tab" data-tab="stats" onclick="switchTab('stats')">Dashboard</div>
+    </div>
+
+    <!-- MENU PANEL -->
+    <div class="panel active" id="panel-menu">
+      <table id="menuTable">
+        <thead>
+          <tr><th>Name</th><th>Category</th><th>Price</th><th>Was Price (offers only)</th><th>Discount %</th><th>Rating</th><th>Status</th><th>Stock</th><th></th></tr>
+        </thead>
+        <tbody id="menuTbody"></tbody>
+      </table>
+
+      <div id="addItemForm">
+        <div>
+          <label>Item name</label>
+          <input id="newName" placeholder="e.g. Iced Mocha">
+        </div>
+        <div>
+          <label>Category</label>
+          <select id="newCategory">
+            <option value="coffee">coffee</option>
+            <option value="offer">offer</option>
+            <option value="dessert">dessert</option>
+            <option value="food">food</option>
+            <option value="sides">sides</option>
+          </select>
+        </div>
+        <div>
+          <label>Price ($)</label>
+          <input id="newPrice" type="number" step="0.01" placeholder="4.99">
+        </div>
+        <button class="btn" onclick="addMenuItem()">Add item</button>
+      </div>
+    </div>
+
+    <!-- ORDERS PANEL -->
+    <div class="panel" id="panel-orders">
+      <table>
+        <thead>
+          <tr><th>Order</th><th>Placed</th><th>Mode</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th></tr>
+        </thead>
+        <tbody id="ordersTbody"></tbody>
+      </table>
+    </div>
+
+    <!-- STATS PANEL -->
+    <div class="panel" id="panel-stats">
+      <div class="stats-row" id="statsRow"></div>
+      <h3>Top items</h3>
+      <table>
+        <thead><tr><th>Item</th><th>Qty sold</th><th>Revenue</th></tr></thead>
+        <tbody id="topItemsTbody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const API_BASE = window.BB_API_BASE || 'http://localhost:4000/api';
+  let TOKEN = sessionStorage.getItem('bb_admin_token') || null;
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  async function api(path, options = {}) {
+    const res = await fetch(API_BASE + path, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(TOKEN ? { Authorization: 'Bearer ' + TOKEN } : {}),
+        ...(options.headers || {}),
+      },
+    });
+    const isJson = (res.headers.get('content-type') || '').includes('application/json');
+    const data = isJson ? await res.json() : null;
+    if (!res.ok) throw new Error((data && data.error) || 'Request failed');
+    return data;
+  }
+
+  async function login() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const errEl = document.getElementById('loginError');
+    errEl.textContent = '';
+    try {
+      const data = await api('/auth/admin/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
+      TOKEN = data.token;
+      sessionStorage.setItem('bb_admin_token', TOKEN);
+      showApp();
+    } catch (err) {
+      errEl.textContent = err.message.includes('Failed to fetch') || err.message.includes('reach')
+        ? 'Could not reach the server. Is the backend running?'
+        : err.message;
+    }
+  }
+
+  function logout() {
+    TOKEN = null;
+    sessionStorage.removeItem('bb_admin_token');
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'block';
+  }
+
+  function showApp() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('apiBaseLabel').textContent = API_BASE;
+    loadMenu();
+  }
+
+  function switchTab(name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    if (name === 'menu') loadMenu();
+    if (name === 'orders') loadOrders();
+    if (name === 'stats') loadStats();
+  }
+
+  /* ── MENU ── */
+  function computeDiscountPct(item) {
+    if (item.category !== 'offer' || !item.original_price || item.original_price <= item.price) {
+      return null;
+    }
+    return Math.round((1 - item.price / item.original_price) * 100);
+  }
+
+  async function loadMenu() {
+    try {
+      const items = await api('/menu/all');
+      const tbody = document.getElementById('menuTbody');
+      tbody.innerHTML = items.map(item => {
+        const pct = computeDiscountPct(item);
+        return `
+        <tr data-id="${item.id}">
+          <td>${item.name}</td>
+          <td>${item.category}</td>
+          <td><input class="editable-price" type="number" step="0.01" value="${item.price}" onchange="updatePrice(${item.id}, this.value)"></td>
+          <td>
+            ${item.category === 'offer'
+              ? `<input class="editable-price" type="number" step="0.01" placeholder="e.g. 14.99" value="${item.original_price ?? ''}" onchange="updateOriginalPrice(${item.id}, this.value)">`
+              : '—'}
+          </td>
+          <td>
+            ${item.category === 'offer'
+              ? `<input class="editable-price" type="number" step="1" min="1" max="95" placeholder="e.g. 40"
+                   value="${pct !== null ? pct : ''}"
+                   ${!item.original_price ? 'disabled title="Set a Was Price first"' : ''}
+                   onchange="updateDiscountPct(${item.id}, this.value)">%`
+              : '—'}
+          </td>
+          <td>${item.rating_count > 0 ? `⭐ ${item.avg_rating.toFixed(1)} (${item.rating_count})` : 'No ratings'}</td>
+          <td><span class="badge ${item.is_available ? 'available' : 'unavailable'}">${item.is_available ? 'Available' : 'Unavailable'}</span></td>
+          <td>${item.stock === null ? '∞' : item.stock}</td>
+          <td class="row-actions">
+            <button onclick="toggleAvailability(${item.id}, ${item.is_available})">${item.is_available ? 'Disable' : 'Enable'}</button>
+            <button class="danger" onclick="deleteMenuItem(${item.id}, '${item.name.replace(/'/g, "\\'")}')">Delete</button>
+          </td>
+        </tr>
+      `;
+      }).join('');
+    } catch (err) {
+      showToast('⚠️ ' + err.message);
+    }
+  }
+
+  async function updatePrice(id, price) {
+    try {
+      await api(`/menu/${id}`, { method: 'PUT', body: JSON.stringify({ price: parseFloat(price) }) });
+      showToast('✅ Price updated');
+      loadMenu(); // reload so the discount % column recalculates against the new price
+    } catch (err) {
+      showToast('⚠️ ' + err.message);
+      loadMenu();
+    }
+  }
+
+  async function updateOriginalPrice(id, originalPrice) {
+    try {
+      const value = originalPrice === '' ? null : parseFloat(originalPrice);
+      await api(`/menu/${id}`, { method: 'PUT', body: JSON.stringify({ original_price: value }) });
+      showToast('✅ "Was" price updated');
+      loadMenu(); // reload so the discount % recalculates
+    } catch (err) {
+      showToast('⚠️ ' + err.message);
+      loadMenu(); // revert the input to the real saved value if the update was rejected
+    }
+  }
+
+  // Editing the % directly works backwards: it keeps "Was Price" fixed and
+  // solves for the new sale price that produces that discount.
+  async function updateDiscountPct(id, pctValue) {
+    const pct = parseFloat(pctValue);
+    if (isNaN(pct) || pct <= 0 || pct >= 100) {
+      showToast('⚠️ Discount must be between 1 and 99%');
+      loadMenu();
+      return;
+    }
+    try {
+      const items = await api('/menu/all');
+      const item = items.find(i => i.id === id);
+      if (!item || !item.original_price) {
+        showToast('⚠️ Set a Was Price first');
+        loadMenu();
+        return;
+      }
+      const newPrice = Math.round(item.original_price * (1 - pct / 100) * 100) / 100;
+      await api(`/menu/${id}`, { method: 'PUT', body: JSON.stringify({ price: newPrice }) });
+      showToast(`✅ Discount set to ${pct}% (price now $${newPrice.toFixed(2)})`);
+      loadMenu();
+    } catch (err) {
+      showToast('⚠️ ' + err.message);
+      loadMenu();
+    }
+  }
+
+  async function toggleAvailability(id, current) {
+    try {
+      await api(`/menu/${id}`, { method: 'PUT', body: JSON.stringify({ is_available: current ? 0 : 1 }) });
+      showToast(current ? '🚫 Marked unavailable' : '✅ Marked available');
+      loadMenu();
+    } catch (err) {
+      showToast('⚠️ ' + err.message);
+    }
+  }
+
+  async function deleteMenuItem(id, name) {
+    if (!confirm(`Delete "${name}" from the menu permanently?`)) return;
+    try {
+      await api(`/menu/${id}`, { method: 'DELETE' });
+      showToast('🗑️ Item deleted');
+      loadMenu();
+    } catch (err) {
+      showToast('⚠️ ' + err.message);
+    }
+  }
+
+  async function addMenuItem() {
+    const name = document.getElementById('newName').value.trim();
+    const category = document.getElementById('newCategory').value;
+    const price = parseFloat(document.getElementById('newPrice').value);
+    if (!name || !price || price <= 0) {
+      showToast('⚠️ Enter a name and a valid price');
+      return;
+    }
+    try {
+      await api('/menu', { method: 'POST', body: JSON.stringify({ name, category, price }) });
+      document.getElementById('newName').value = '';
+      document.getElementById('newPrice').value = '';
+      showToast('✅ Item added');
+      loadMenu();
+    } catch (err) {
+      showToast('⚠️ ' + err.message);
+    }
+  }
+
+  /* ── ORDERS ── */
+  const ORDER_STATUSES = ['placed', 'confirmed', 'preparing', 'on-the-way', 'ready', 'delivered', 'cancelled'];
+
+  async function loadOrders() {
+    try {
+      const orders = await api('/orders');
+      const tbody = document.getElementById('ordersTbody');
+      if (!orders.length) {
+        tbody.innerHTML = `<tr><td colspan="7" class="empty-state">No orders yet.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = orders.map(o => `
+        <tr>
+          <td>${o.id}</td>
+          <td>${o.placed_at}</td>
+          <td>${o.delivery_mode}</td>
+          <td>${formatOrderItems(o.items)}</td>
+          <td>$${o.total.toFixed(2)}</td>
+          <td>${o.payment_method} — ${o.payment_status}</td>
+          <td>
+            <select class="status-select" onchange="updateOrderStatus('${o.id}', this.value)">
+              ${ORDER_STATUSES.map(s => `<option value="${s}" ${s === o.status ? 'selected' : ''}>${s}</option>`).join('')}
+            </select>
+          </td>
+        </tr>
+      `).join('');
+    } catch (err) {
+      showToast('⚠️ ' + err.message);
+    }
+  }
+
+  // Shows what to actually prepare — including the specific dessert/sandwich/drink
+  // a customer picked for a combo item, not just the combo's generic name.
+  function formatOrderItems(items) {
+    if (!items || !items.length) return '—';
+    return items.map(i => {
+      const selectionsText = i.selections && i.selections.length
+        ? ` <span style="opacity:0.7;">(${i.selections.join(' + ')})</span>`
+        : '';
+      return `${i.qty}× ${i.name}${selectionsText}`;
+    }).join('<br>');
+  }
+
+  async function updateOrderStatus(id, status) {
+    try {
+      await api(`/orders/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) });
+      showToast('✅ Status updated');
+    } catch (err) {
+      showToast('⚠️ ' + err.message);
+    }
+  }
+
+  /* ── STATS ── */
+  async function loadStats() {
+    try {
+      const stats = await api('/admin/stats');
+      document.getElementById('statsRow').innerHTML = `
+        <div class="stat-card"><div class="label">Today's Revenue</div><div class="value">$${stats.todayRevenue.toFixed(2)}</div></div>
+        <div class="stat-card"><div class="label">Today's Orders</div><div class="value">${stats.todayOrderCount}</div></div>
+        <div class="stat-card"><div class="label">Active Orders</div><div class="value">${stats.activeOrders}</div></div>
+      `;
+      const tbody = document.getElementById('topItemsTbody');
+      tbody.innerHTML = stats.topItems.length
+        ? stats.topItems.map(i => `<tr><td>${i.name}</td><td>${i.total_qty}</td><td>$${i.total_revenue.toFixed(2)}</td></tr>`).join('')
+        : `<tr><td colspan="3" class="empty-state">No sales yet.</td></tr>`;
+    } catch (err) {
+      showToast('⚠️ ' + err.message);
+    }
+  }
+
+  // Auto-login if a token is already cached in this browser tab
+  if (TOKEN) showApp();
+</script>
+</body>
+</html>

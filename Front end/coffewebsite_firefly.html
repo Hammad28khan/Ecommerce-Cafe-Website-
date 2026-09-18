@@ -1,0 +1,4681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brew & Bliss Café</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ========== COMMENTS SECTION ========== */
+.comment-form-wrapper {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: var(--cream);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 20px rgba(62, 28, 0, 0.07);
+    border: 1px solid rgba(160, 82, 45, 0.12);
+}
+
+.comment-avatar-placeholder {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    background: linear-gradient(135deg, var(--brown-mid), var(--brown-light));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.1rem;
+    margin-top: 4px;
+}
+
+.comment-input-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comment-name-input {
+    width: 100%;
+    padding: 10px 16px;
+    border: 1.5px solid rgba(160, 82, 45, 0.2);
+    border-radius: 50px;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    background: white;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.comment-name-input:focus {
+    border-color: var(--brown-accent);
+    box-shadow: 0 0 0 3px rgba(160, 82, 45, 0.1);
+}
+
+.comment-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid rgba(160, 82, 45, 0.2);
+    border-radius: 16px;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.92rem;
+    color: var(--text-dark);
+    background: white;
+    outline: none;
+    resize: none;
+    line-height: 1.6;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.comment-textarea:focus {
+    border-color: var(--brown-accent);
+    box-shadow: 0 0 0 3px rgba(160, 82, 45, 0.1);
+}
+
+.comment-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.char-counter {
+    font-size: 0.75rem;
+    color: var(--brown-accent);
+    opacity: 0.7;
+}
+
+.comment-submit-btn {
+    background: linear-gradient(135deg, var(--brown-mid), var(--brown-light));
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 14px rgba(107, 58, 42, 0.3);
+}
+
+.comment-submit-btn:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 8px 22px rgba(107, 58, 42, 0.45);
+    background: linear-gradient(135deg, var(--gold), #E8B850);
+    color: var(--brown-dark);
+}
+
+.comment-submit-btn:active {
+    transform: scale(0.97);
+}
+
+/* ── Comment Cards ── */
+.comments-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.comment-card {
+    background: var(--white);
+    border: 1px solid rgba(160, 82, 45, 0.1);
+    border-radius: 18px;
+    padding: 20px 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    box-shadow: 0 2px 12px rgba(62, 28, 0, 0.05);
+    animation: commentSlideIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+    position: relative;
+    overflow: hidden;
+}
+
+.comment-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--brown-accent), var(--gold));
+    border-radius: 3px 0 0 3px;
+}
+
+@keyframes commentSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.comment-user-avatar {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brown-mid), var(--brown-accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    font-family: 'Playfair Display', serif;
+    border: 2px solid rgba(212, 168, 67, 0.35);
+}
+
+.comment-content {
+    flex: 1;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+.comment-author {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--brown-dark);
+    font-family: 'Playfair Display', serif;
+}
+
+.comment-time {
+    font-size: 0.75rem;
+    color: var(--brown-accent);
+    opacity: 0.75;
+}
+
+.comment-body {
+    font-size: 0.92rem;
+    color: var(--text-mid);
+    line-height: 1.65;
+    margin-bottom: 12px;
+}
+
+.comment-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.like-btn {
+    background: none;
+    border: 1.5px solid rgba(160, 82, 45, 0.2);
+    border-radius: 50px;
+    padding: 5px 14px;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.8rem;
+    color: var(--brown-mid);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+}
+
+.like-btn:hover {
+    background: rgba(212, 168, 67, 0.12);
+    border-color: var(--gold);
+    color: var(--brown-dark);
+    transform: scale(1.05);
+}
+
+.like-btn.liked {
+    background: linear-gradient(135deg, rgba(212,168,67,0.15), rgba(212,168,67,0.25));
+    border-color: var(--gold);
+    color: var(--brown-dark);
+}
+
+.like-btn.liked i {
+    color: #e05c5c;
+    animation: heartPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes heartPop {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.45); }
+    100% { transform: scale(1); }
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    font-size: 0.78rem;
+    color: #c0392b;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-family: 'Lato', sans-serif;
+}
+
+.delete-btn:hover {
+    opacity: 1;
+    background: rgba(192, 57, 43, 0.08);
+    transform: scale(1.05);
+}
+
+/* ── Empty State ── */
+.empty-comments {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--brown-accent);
+    opacity: 0.6;
+}
+
+.empty-comments .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    animation: float 3s ease-in-out infinite;
+}
+
+.empty-comments p {
+    font-size: 0.95rem;
+    font-family: 'Playfair Display', serif;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-8px); }
+}
+
+/* ── Toast Notification ── */
+.toast {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    background: linear-gradient(135deg, var(--brown-mid), var(--brown-light));
+    color: white;
+    padding: 12px 22px;
+    border-radius: 50px;
+    font-size: 0.88rem;
+    font-family: 'Lato', sans-serif;
+    box-shadow: 0 6px 24px rgba(107, 58, 42, 0.4);
+    z-index: 9999;
+    animation: toastIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    pointer-events: none;
+}
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.9); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    .comment-form-wrapper {
+        flex-direction: column;
+        gap: 12px;
+    }
+    .comment-avatar-placeholder {
+        display: none;
+    }
+    .comment-form-footer {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+    }
+}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --brown-dark: #3E1C00;
+            --brown-mid: #6B3A2A;
+            --brown-light: #A0522D;
+            --brown-accent: #C8864E;
+            --cream: #FFF8F0;
+            --white: #FFFFFF;
+            --gold: #D4A843;
+            --text-dark: #2C1810;
+            --text-mid: #5C3D2E;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: var(--white);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* ========== HEADER ========== */
+        header {
+            background: linear-gradient(135deg, var(--brown-dark) 0%, var(--brown-mid) 50%, var(--brown-light) 100%);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(62, 28, 0, 0.4);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 18px 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: var(--brown-dark);
+            box-shadow: 0 2px 10px rgba(212, 168, 67, 0.4);
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            color: var(--white);
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .logo-text span {
+            font-size: 0.7rem;
+            color: var(--gold);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--white);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .nav-links a.active {
+            color: var(--gold);
+            background: rgba(212, 168, 67, 0.15);
+        }
+
+        .nav-offer-btn {
+            background: linear-gradient(135deg, var(--gold), #E8B850) !important;
+            color: var(--brown-dark) !important;
+            font-weight: 700 !important;
+            padding: 9px 20px !important;
+            border-radius: 25px !important;
+            box-shadow: 0 3px 12px rgba(212, 168, 67, 0.4);
+            animation: pulse-gold 2s infinite;
+        }
+
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 3px 12px rgba(212, 168, 67, 0.4); }
+            50% { box-shadow: 0 3px 20px rgba(212, 168, 67, 0.8); }
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .hamburger span {
+            width: 26px;
+            height: 2px;
+            background: white;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        /* ========== HERO SECTION ========== */
+        .hero {
+            position: relative;
+            height: 92vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        .hero-bg video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.5);
+            transform: scale(1.05);
+            animation: heroZoom 8s ease-in-out infinite alternate;
+        }
+
+        .hero-bg-fallback {
+            position: absolute;
+            inset: 0;
+            background: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1800&q=80') center/cover no-repeat;
+            z-index: -1;
+        }
+
+        @keyframes heroZoom {
+            from { transform: scale(1.05); }
+            to { transform: scale(1.12); }
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(62,28,0,0.3) 0%, transparent 50%, rgba(62,28,0,0.5) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            text-align: center;
+            color: white;
+            animation: fadeInUp 1.2s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(212, 168, 67, 0.25);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            padding: 6px 20px;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.8rem, 7vw, 5.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            text-shadow: 2px 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .hero-title span {
+            color: var(--gold);
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            margin-bottom: 36px;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), #E8B850);
+            color: var(--brown-dark);
+            padding: 14px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(212, 168, 67, 0.5);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(212, 168, 67, 0.7);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            padding: 14px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.35);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-3px);
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            opacity: 0.7;
+            animation: bounce 2s infinite;
+            font-size: 1.4rem;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(8px); }
+        }
+
+        /* ========== SECTION BASE ========== */
+        section {
+            padding: 90px 20px;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            font-size: 0.72rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--brown-accent);
+            background: rgba(168, 82, 45, 0.1);
+            padding: 5px 16px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            color: var(--brown-dark);
+            margin-bottom: 12px;
+        }
+
+        .section-divider {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, var(--brown-accent), var(--gold));
+            border-radius: 2px;
+            margin: 0 auto;
+        }
+
+        /* ========== OFFERS PAGE ========== */
+        #offers {
+            background: linear-gradient(135deg, var(--brown-dark) 0%, var(--brown-mid) 100%);
+            color: white;
+            padding: 90px 20px;
+        }
+
+        #offers .section-tag {
+            color: var(--gold);
+            background: rgba(212, 168, 67, 0.2);
+        }
+
+        #offers .section-title {
+            color: white;
+        }
+
+        #offers .section-divider {
+            background: linear-gradient(to right, var(--gold), #E8B850);
+        }
+
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
+        }
+
+        .offer-card {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: background 0.4s ease, box-shadow 0.4s ease,
+                        transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            --row-x: 0px;
+            --hover-y: 0px;
+            transform: translateX(var(--row-x)) translateY(var(--hover-y));
+            will-change: transform;
+        }
+
+        .offer-card:hover {
+            --hover-y: -8px;
+            background: rgba(255,255,255,0.14);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .offer-img {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .offer-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .offer-card:hover .offer-img img {
+            transform: scale(1.08);
+        }
+
+        .offer-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: linear-gradient(135deg, var(--gold), #E8B850);
+            color: var(--brown-dark);
+            font-weight: 700;
+            font-size: 0.8rem;
+            padding: 5px 14px;
+            border-radius: 20px;
+            z-index: 2;
+        }
+
+        .offer-body {
+            padding: 22px;
+        }
+
+        .offer-body h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .offer-body p {
+            font-size: 0.88rem;
+            opacity: 0.8;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .offer-price-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .offer-old-price {
+            font-size: 0.9rem;
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+
+        .offer-new-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        /* ========== MENU TABS ========== */
+        .menu-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--cream);
+            color: var(--brown-mid);
+            border: 2px solid transparent;
+            padding: 10px 28px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--brown-accent);
+            color: var(--brown-dark);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--brown-mid), var(--brown-light));
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 16px rgba(107, 58, 42, 0.35);
+        }
+
+        .menu-panel {
+            display: none;
+        }
+
+        .menu-panel.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== MENU CARDS ========== */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 28px;
+        }
+
+        .menu-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(62, 28, 0, 0.08);
+            transition: box-shadow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                        transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            --row-x: 0px;
+            --hover-y: 0px;
+            --hover-scale: 1;
+            transform: translateX(var(--row-x)) translateY(var(--hover-y)) scale(var(--hover-scale));
+            will-change: transform;
+        }
+
+        .menu-card:hover {
+            --hover-y: -10px;
+            --hover-scale: 1.02;
+            box-shadow: 0 20px 50px rgba(62, 28, 0, 0.18);
+        }
+
+        /* ========== ALTERNATING ROW SLIDE-IN ANIMATION ========== */
+        /* Applied via JS (initRowScrollAnimations) to .menu-card / .offer-card.
+           Sets --row-x only, so it composes cleanly with each card's own
+           hover-lift transform instead of fighting over the transform property. */
+        .scroll-row-item.from-left {
+            --row-x: -130%;
+        }
+
+        .scroll-row-item.from-right {
+            --row-x: 130%;
+        }
+
+        .scroll-row-item.row-visible {
+            --row-x: 0px;
+        }
+
+        /* Respect users who've asked for less motion */
+        @media (prefers-reduced-motion: reduce) {
+            .scroll-row-item.from-left,
+            .scroll-row-item.from-right {
+                --row-x: 0px;
+            }
+        }
+
+        .card-img {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .menu-card:hover .card-img img {
+            transform: scale(1.1);
+        }
+
+        .card-category {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(255,255,255,0.9);
+            color: var(--brown-mid);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .card-body {
+            padding: 20px 22px 22px;
+        }
+
+        .card-body h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: var(--brown-dark);
+            margin-bottom: 8px;
+        }
+
+        .ingredients {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .ingredient-tag {
+            background: var(--cream);
+            color: var(--brown-mid);
+            font-size: 0.72rem;
+            padding: 3px 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(160, 82, 45, 0.2);
+        }
+
+        /* ========== PRICE BOX (Curved + Animated) ========== */
+        .price-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, var(--brown-mid), var(--brown-light));
+            color: white;
+            padding: 9px 22px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 15px rgba(107, 58, 42, 0.3);
+        }
+
+        .price-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--gold), #E8B850);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .price-box:hover {
+            transform: scale(1.08) translateY(-2px);
+            box-shadow: 0 10px 28px rgba(212, 168, 67, 0.6);
+            color: var(--brown-dark);
+        }
+
+        .price-box:hover::before {
+            opacity: 1;
+        }
+
+        .price-box span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .price-box i {
+            position: relative;
+            z-index: 1;
+            font-size: 0.85rem;
+            transition: transform 0.3s ease;
+        }
+
+        .price-box:hover i {
+            transform: rotate(20deg) scale(1.2);
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--gold);
+            font-size: 0.8rem;
+        }
+
+        .rating span {
+            color: var(--text-mid);
+            font-size: 0.78rem;
+        }
+
+        .rating .rating-star {
+            cursor: pointer;
+            transition: transform 0.12s ease;
+        }
+
+        .rating .rating-star:hover {
+            transform: scale(1.2);
+        }
+
+        .rating.rating-submitting .rating-star {
+            cursor: wait;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .rating-count {
+            margin-left: 2px;
+        }
+
+        /* ========== COFFEE SECTION ========== */
+        #coffees {
+            background: var(--cream);
+        }
+
+        /* ========== SNACKS SECTION ========== */
+        #snacks {
+            background: var(--white);
+        }
+
+        /* ========== DESSERTS SECTION ========== */
+        #desserts {
+            background: var(--cream);
+        }
+
+        /* ========== GALLERY STRIP ========== */
+        .gallery-strip {
+            display: flex;
+            gap: 0;
+            height: 280px;
+            overflow: hidden;
+        }
+
+        .gallery-strip img {
+            flex: 1;
+            object-fit: cover;
+            filter: brightness(0.8);
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+
+        .gallery-strip img:hover {
+            flex: 3;
+            filter: brightness(1);
+        }
+
+        /* ========== TESTIMONIALS ========== */
+        #testimonials {
+            background: var(--white);
+            padding: 80px 20px;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .testimonial-card {
+            background: var(--cream);
+            border-radius: 20px;
+            padding: 28px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(62, 28, 0, 0.1);
+        }
+
+        .quote-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+            opacity: 0.4;
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .testimonial-text {
+            font-size: 0.92rem;
+            color: var(--text-mid);
+            line-height: 1.7;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .author-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--gold);
+        }
+
+        .author-info h4 {
+            font-size: 0.9rem;
+            color: var(--brown-dark);
+            font-weight: 700;
+        }
+
+        .author-info p {
+            font-size: 0.75rem;
+            color: var(--brown-accent);
+        }
+
+        /* ========== FOOTER ========== */
+        footer {
+            background: linear-gradient(135deg, var(--brown-dark) 0%, var(--brown-mid) 100%);
+            color: white;
+            padding: 60px 20px 24px;
+        }
+
+        .footer-grid {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 24px;
+        }
+
+        .footer-brand .logo-text h1 {
+            font-size: 1.6rem;
+            margin-bottom: 4px;
+        }
+
+        .footer-brand p {
+            font-size: 0.88rem;
+            opacity: 0.7;
+            line-height: 1.7;
+            margin-top: 14px;
+            max-width: 280px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .social-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            background: var(--gold);
+            color: var(--brown-dark);
+            border-color: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .footer-col h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            color: var(--gold);
+            margin-bottom: 18px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: all 0.3s;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--gold);
+            padding-left: 5px;
+        }
+
+        .footer-hours div {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+
+        .footer-hours div span:last-child {
+            color: var(--gold);
+        }
+
+        .footer-bottom {
+            max-width: 1300px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 0.82rem;
+            opacity: 0.5;
+        }
+
+        /* ========== FLOATING CART ========== */
+        .floating-cart {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--brown-mid), var(--brown-light));
+            color: white;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: 0 6px 24px rgba(107, 58, 42, 0.5);
+            cursor: pointer;
+            z-index: 999;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .floating-cart:hover {
+            transform: scale(1.1) rotate(-10deg);
+            box-shadow: 0 10px 32px rgba(107, 58, 42, 0.7);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--gold);
+            color: var(--brown-dark);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 0.65rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 900px) {
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 16px 20px;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--brown-dark);
+                flex-direction: column;
+                padding: 20px;
+                gap: 4px;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links a {
+                width: 100%;
+                text-align: center;
+                padding: 12px;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-strip {
+                height: 200px;
+            }
+        }
+
+        /* ========== STATS BAR ========== */
+        .stats-bar {
+            background: var(--cream);
+            padding: 40px 20px;
+        }
+
+        .stats-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 20px;
+        }
+
+        .stat-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--brown-mid);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--brown-accent);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .stats-inner {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ========== CART DRAWER ========== */
+        .cart-overlay {
+            position: fixed; inset: 0;
+            background: rgba(62,28,0,0.45);
+            z-index: 2000;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.35s ease;
+            backdrop-filter: blur(3px);
+        }
+        .cart-overlay.open { opacity: 1; pointer-events: all; }
+
+        .cart-drawer {
+            position: fixed; top: 0; right: -420px;
+            width: 100%; max-width: 420px; height: 100%;
+            background: var(--white);
+            box-shadow: -10px 0 50px rgba(62,28,0,0.2);
+            z-index: 2100;
+            display: flex; flex-direction: column;
+            transition: right 0.38s cubic-bezier(0.22,1,0.36,1);
+        }
+        .cart-drawer.open { right: 0; }
+
+        .cart-drawer-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 22px 24px 18px;
+            border-bottom: 1px solid rgba(160,82,45,0.12);
+            background: linear-gradient(135deg, var(--brown-dark), var(--brown-mid));
+            color: white;
+        }
+        .cart-drawer-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem; font-weight: 700;
+        }
+        .cart-close-btn {
+            background: rgba(255,255,255,0.15); border: none;
+            width: 36px; height: 36px; border-radius: 50%;
+            color: white; font-size: 1.1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .cart-close-btn:hover { background: rgba(255,255,255,0.28); }
+
+        .cart-items-list {
+            flex: 1; overflow-y: auto; padding: 16px 20px;
+        }
+        .cart-items-list::-webkit-scrollbar { width: 4px; }
+        .cart-items-list::-webkit-scrollbar-thumb { background: var(--brown-accent); border-radius: 2px; }
+
+        .cart-empty-state {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; height: 100%; gap: 12px;
+            color: var(--brown-accent); opacity: 0.6; text-align: center;
+        }
+        .cart-empty-state i { font-size: 3rem; }
+        .cart-empty-state p { font-family: 'Playfair Display', serif; font-size: 1rem; }
+
+        .cart-item {
+            display: flex; gap: 14px; align-items: center;
+            padding: 14px 0; border-bottom: 1px solid rgba(160,82,45,0.1);
+            animation: commentSlideIn 0.3s ease both;
+        }
+        .cart-item-img {
+            width: 62px; height: 62px; border-radius: 12px;
+            object-fit: cover; flex-shrink: 0;
+        }
+        .cart-item-info { flex: 1; }
+        .cart-item-info h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.92rem; color: var(--brown-dark);
+            margin-bottom: 4px;
+        }
+        .cart-item-price {
+            font-size: 0.88rem; color: var(--brown-accent); font-weight: 700;
+        }
+        .cart-qty-controls {
+            display: flex; align-items: center; gap: 10px; margin-top: 8px;
+        }
+        .qty-btn {
+            width: 26px; height: 26px; border-radius: 50%;
+            border: 1.5px solid rgba(160,82,45,0.3);
+            background: var(--cream); color: var(--brown-dark);
+            font-size: 0.9rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .qty-btn:hover { background: var(--brown-mid); color: white; border-color: var(--brown-mid); }
+        .qty-num { font-weight: 700; color: var(--brown-dark); font-size: 0.9rem; min-width: 18px; text-align: center; }
+        .cart-item-remove {
+            background: none; border: none;
+            color: #c0392b; font-size: 0.8rem; cursor: pointer;
+            opacity: 0.45; transition: opacity 0.2s;
+        }
+        .cart-item-remove:hover { opacity: 1; }
+
+        .cart-footer {
+            padding: 18px 20px 24px;
+            border-top: 1px solid rgba(160,82,45,0.12);
+            background: var(--cream);
+        }
+        .cart-summary-row {
+            display: flex; justify-content: space-between;
+            font-size: 0.88rem; color: var(--text-mid);
+            margin-bottom: 6px;
+        }
+        .cart-summary-row.total {
+            font-weight: 700; font-size: 1.05rem;
+            color: var(--brown-dark); margin-top: 10px; padding-top: 10px;
+            border-top: 1px dashed rgba(160,82,45,0.2);
+        }
+        .cart-checkout-btn {
+            width: 100%; margin-top: 16px;
+            background: linear-gradient(135deg, var(--brown-mid), var(--brown-light));
+            color: white; border: none; padding: 14px;
+            border-radius: 50px; font-family: 'Lato', sans-serif;
+            font-size: 0.95rem; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            box-shadow: 0 4px 16px rgba(107,58,42,0.3);
+        }
+        .cart-checkout-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(107,58,42,0.45);
+            background: linear-gradient(135deg, var(--gold), #E8B850);
+            color: var(--brown-dark);
+        }
+        .cart-checkout-btn:disabled {
+            opacity: 0.4; cursor: not-allowed; transform: none;
+        }
+
+        /* ========== ADD TO CART BUTTON (replaces price-box) ========== */
+        .add-to-cart-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: linear-gradient(135deg, var(--brown-mid), var(--brown-light));
+            color: white; padding: 9px 18px; border-radius: 50px;
+            font-size: 0.95rem; font-weight: 700; cursor: pointer;
+            position: relative; overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+            box-shadow: 0 4px 15px rgba(107,58,42,0.3);
+            border: none; font-family: 'Lato', sans-serif;
+        }
+        .add-to-cart-btn::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, var(--gold), #E8B850);
+            opacity: 0; transition: opacity 0.35s ease;
+        }
+        .add-to-cart-btn:hover {
+            transform: scale(1.08) translateY(-2px);
+            box-shadow: 0 10px 28px rgba(212,168,67,0.6);
+            color: var(--brown-dark);
+        }
+        .add-to-cart-btn:hover::before { opacity: 1; }
+        .add-to-cart-btn span, .add-to-cart-btn i { position: relative; z-index: 1; }
+        .add-to-cart-btn i { font-size: 0.85rem; transition: transform 0.3s; }
+        .add-to-cart-btn:hover i { transform: rotate(20deg) scale(1.2); }
+        .add-to-cart-btn.added {
+            background: linear-gradient(135deg, #27ae60, #2ecc71) !important;
+        }
+        .add-to-cart-btn.added::before { opacity: 0 !important; }
+
+        /* offer card add btn */
+        .offer-add-btn {
+            background: linear-gradient(135deg, var(--gold), #E8B850);
+            color: var(--brown-dark); border: none;
+            padding: 10px 22px; border-radius: 50px;
+            font-family: 'Lato', sans-serif; font-size: 0.88rem; font-weight: 700;
+            cursor: pointer; display: flex; align-items: center; gap: 8px;
+            transition: all 0.3s ease; box-shadow: 0 4px 14px rgba(212,168,67,0.35);
+        }
+        .offer-add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(212,168,67,0.55);
+        }
+
+        /* ========== ORDER MODAL (2 steps: Delivery Info → Payment) ========== */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(62,28,0,0.5); z-index: 3000;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px; opacity: 0; pointer-events: none;
+            transition: opacity 0.35s ease;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+        .order-modal {
+            background: var(--white); border-radius: 24px;
+            width: 100%; max-width: 520px; max-height: 90vh;
+            overflow-y: auto; box-shadow: 0 30px 80px rgba(62,28,0,0.3);
+            transform: scale(0.92) translateY(30px);
+            transition: transform 0.38s cubic-bezier(0.22,1,0.36,1);
+        }
+        .order-modal::-webkit-scrollbar { width: 4px; }
+        .order-modal::-webkit-scrollbar-thumb { background: var(--brown-accent); border-radius: 2px; }
+        .modal-overlay.open .order-modal { transform: scale(1) translateY(0); }
+
+        /* ── Combo item slot picker ── */
+        .combo-slot-block {
+            margin-bottom: 18px;
+        }
+        .combo-slot-label {
+            font-weight: 600;
+            font-size: 0.92rem;
+            color: var(--brown-dark);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .combo-slot-label .slot-check {
+            color: #2ecc71;
+            display: none;
+        }
+        .combo-slot-label.slot-filled .slot-check {
+            display: inline;
+        }
+        .combo-slot-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .combo-option-btn {
+            border: 2px solid rgba(0,0,0,0.1);
+            background: var(--white);
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-dark);
+        }
+        .combo-option-btn:hover {
+            border-color: var(--brown-accent);
+        }
+        .combo-option-btn.selected {
+            border-color: var(--brown-accent);
+            background: var(--brown-accent);
+            color: white;
+            font-weight: 600;
+        }
+        .combo-slot-empty {
+            font-size: 0.82rem;
+            color: var(--danger, #c0392b);
+            font-style: italic;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--brown-dark), var(--brown-mid));
+            color: white; padding: 22px 28px 18px;
+            border-radius: 24px 24px 0 0;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .modal-header h2 {
+            font-family: 'Playfair Display', serif; font-size: 1.25rem;
+        }
+        .modal-close {
+            background: rgba(255,255,255,0.15); border: none;
+            width: 34px; height: 34px; border-radius: 50%;
+            color: white; font-size: 1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .modal-close:hover { background: rgba(255,255,255,0.28); }
+
+        .modal-steps {
+            display: flex; gap: 0; padding: 20px 28px 0;
+        }
+        .modal-step-indicator {
+            flex: 1; text-align: center; position: relative;
+        }
+        .modal-step-indicator::after {
+            content: ''; position: absolute;
+            top: 14px; left: 60%; width: 80%; height: 2px;
+            background: rgba(160,82,45,0.18);
+        }
+        .modal-step-indicator:last-child::after { display: none; }
+        .step-dot {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: rgba(160,82,45,0.15);
+            color: var(--brown-accent); font-size: 0.8rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 6px; transition: all 0.3s ease;
+            border: 2px solid rgba(160,82,45,0.2);
+        }
+        .step-dot.active {
+            background: var(--brown-mid); color: white; border-color: var(--brown-mid);
+        }
+        .step-dot.done {
+            background: #27ae60; color: white; border-color: #27ae60;
+        }
+        .step-label { font-size: 0.7rem; color: var(--brown-accent); letter-spacing: 0.5px; }
+
+        .modal-body { padding: 22px 28px 28px; }
+
+        .modal-panel { display: none; }
+        .modal-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block; font-size: 0.78rem; font-weight: 700;
+            color: var(--brown-mid); letter-spacing: 0.5px;
+            text-transform: uppercase; margin-bottom: 6px;
+        }
+        .form-input {
+            width: 100%; padding: 11px 16px;
+            border: 1.5px solid rgba(160,82,45,0.2);
+            border-radius: 12px; font-family: 'Lato', sans-serif;
+            font-size: 0.92rem; color: var(--text-dark);
+            background: var(--cream); outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .form-input:focus {
+            border-color: var(--brown-accent);
+            box-shadow: 0 0 0 3px rgba(160,82,45,0.1);
+            background: white;
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .delivery-type-btns {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px;
+        }
+        .delivery-type-btn {
+            padding: 12px; border-radius: 12px;
+            border: 2px solid rgba(160,82,45,0.2);
+            background: var(--cream); cursor: pointer;
+            font-family: 'Lato', sans-serif; font-size: 0.88rem;
+            font-weight: 700; color: var(--brown-mid);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: all 0.25s ease;
+        }
+        .delivery-type-btn.active {
+            border-color: var(--brown-mid); background: var(--brown-mid); color: white;
+        }
+        .delivery-type-btn:hover:not(.active) { border-color: var(--brown-accent); }
+
+        /* ── Payment panel ── */
+        .order-summary-mini {
+            background: var(--cream); border-radius: 14px;
+            padding: 14px 16px; margin-bottom: 20px;
+        }
+        .order-summary-mini h4 {
+            font-family: 'Playfair Display', serif; font-size: 0.95rem;
+            color: var(--brown-dark); margin-bottom: 10px;
+        }
+        .summary-item {
+            display: flex; justify-content: space-between;
+            font-size: 0.83rem; color: var(--text-mid); margin-bottom: 4px;
+        }
+        .summary-item.total {
+            font-weight: 700; color: var(--brown-dark);
+            padding-top: 8px; margin-top: 6px;
+            border-top: 1px dashed rgba(160,82,45,0.25); font-size: 0.95rem;
+        }
+
+        .payment-methods {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px;
+        }
+        .pay-method-btn {
+            padding: 12px 8px; border-radius: 12px;
+            border: 2px solid rgba(160,82,45,0.2);
+            background: var(--cream); cursor: pointer;
+            font-family: 'Lato', sans-serif; font-size: 0.78rem;
+            font-weight: 700; color: var(--brown-mid);
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            transition: all 0.25s ease;
+        }
+        .pay-method-btn i { font-size: 1.3rem; }
+        .pay-method-btn.active {
+            border-color: var(--brown-mid); background: var(--brown-mid); color: white;
+        }
+        .pay-method-btn:hover:not(.active) { border-color: var(--brown-accent); }
+
+        .card-fields { animation: fadeIn 0.3s ease; }
+        .card-number-wrap { position: relative; }
+        .card-icons {
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+            display: flex; gap: 6px;
+        }
+        .card-icons i { font-size: 1.4rem; opacity: 0.5; }
+
+        /* UPI field */
+        .upi-field { animation: fadeIn 0.3s ease; }
+
+        .place-order-btn {
+            width: 100%; margin-top: 18px;
+            background: linear-gradient(135deg, var(--brown-mid), var(--brown-light));
+            color: white; border: none; padding: 15px;
+            border-radius: 50px; font-family: 'Lato', sans-serif;
+            font-size: 1rem; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            box-shadow: 0 4px 18px rgba(107,58,42,0.3);
+        }
+        .place-order-btn:hover {
+            background: linear-gradient(135deg, var(--gold), #E8B850);
+            color: var(--brown-dark);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(212,168,67,0.5);
+        }
+
+        .modal-nav {
+            display: flex; gap: 10px; margin-top: 16px;
+        }
+        .modal-back-btn {
+            flex: 0 0 auto; padding: 12px 20px; border-radius: 50px;
+            border: 2px solid rgba(160,82,45,0.25); background: transparent;
+            color: var(--brown-mid); font-family: 'Lato', sans-serif;
+            font-size: 0.88rem; font-weight: 700; cursor: pointer;
+            transition: all 0.25s;
+        }
+        .modal-back-btn:hover { background: var(--cream); border-color: var(--brown-mid); }
+        .modal-next-btn {
+            flex: 1; padding: 12px 20px; border-radius: 50px;
+            border: none; background: linear-gradient(135deg, var(--brown-mid), var(--brown-light));
+            color: white; font-family: 'Lato', sans-serif;
+            font-size: 0.92rem; font-weight: 700; cursor: pointer;
+            transition: all 0.3s ease; box-shadow: 0 4px 14px rgba(107,58,42,0.28);
+        }
+        .modal-next-btn:hover {
+            background: linear-gradient(135deg, var(--gold), #E8B850);
+            color: var(--brown-dark); transform: translateY(-1px);
+        }
+
+        /* ========== CONFIRMATION MODAL ========== */
+        .confirm-modal {
+            background: var(--white); border-radius: 24px;
+            width: 100%; max-width: 420px;
+            box-shadow: 0 30px 80px rgba(62,28,0,0.3);
+            transform: scale(0.92) translateY(30px);
+            transition: transform 0.38s cubic-bezier(0.22,1,0.36,1);
+            text-align: center; padding: 40px 32px 36px; overflow: hidden;
+        }
+        .modal-overlay.open .confirm-modal { transform: scale(1) translateY(0); }
+        .confirm-icon {
+            width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.2rem; color: white;
+            animation: confirmPop 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+        }
+        @keyframes confirmPop {
+            from { transform: scale(0); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
+        }
+        .confirm-modal h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem; color: var(--brown-dark); margin-bottom: 8px;
+        }
+        .confirm-modal p {
+            font-size: 0.9rem; color: var(--text-mid); line-height: 1.6; margin-bottom: 10px;
+        }
+        .order-id-badge {
+            display: inline-block; background: var(--cream);
+            border: 1px solid rgba(160,82,45,0.2); border-radius: 8px;
+            padding: 8px 18px; font-size: 0.88rem;
+            font-weight: 700; color: var(--brown-mid); margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        .confirm-eta {
+            background: rgba(39,174,96,0.08); border: 1px solid rgba(39,174,96,0.2);
+            border-radius: 12px; padding: 12px 16px;
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 24px; text-align: left;
+        }
+        .confirm-eta i { color: #27ae60; font-size: 1.2rem; }
+        .confirm-eta span { font-size: 0.88rem; color: var(--text-mid); }
+        .confirm-close-btn {
+            width: 100%; padding: 14px;
+            background: linear-gradient(135deg, var(--brown-mid), var(--brown-light));
+            color: white; border: none; border-radius: 50px;
+            font-family: 'Lato', sans-serif; font-size: 0.95rem; font-weight: 700;
+            cursor: pointer; transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(107,58,42,0.3);
+        }
+        .confirm-close-btn:hover {
+            background: linear-gradient(135deg, var(--gold), #E8B850);
+            color: var(--brown-dark); transform: translateY(-2px);
+        }
+
+        /* loading spinner on place order */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner {
+            width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.4);
+            border-top-color: white; border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        /* ========== ORDER TRACKING MODAL ========== */
+        #trackModalOverlay {
+            position: fixed; inset: 0; z-index: 9000;
+            background: rgba(30,10,0,0.65); backdrop-filter: blur(6px);
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px; opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        #trackModalOverlay.open { opacity: 1; pointer-events: all; }
+
+        .track-modal {
+            background: var(--white); border-radius: 24px;
+            width: 100%; max-width: 500px;
+            box-shadow: 0 30px 80px rgba(62,28,0,0.3);
+            transform: scale(0.92) translateY(30px);
+            transition: transform 0.38s cubic-bezier(0.22,1,0.36,1);
+            overflow: hidden; max-height: 90vh; overflow-y: auto;
+        }
+        #trackModalOverlay.open .track-modal { transform: scale(1) translateY(0); }
+
+        .track-modal-header {
+            background: linear-gradient(135deg, var(--brown-dark), var(--brown-mid));
+            padding: 24px 28px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .track-modal-header h2 {
+            font-family: 'Playfair Display', serif; color: white;
+            font-size: 1.35rem;
+        }
+        .track-modal-header p { color: rgba(255,255,255,0.7); font-size: 0.82rem; margin-top: 3px; }
+        .track-modal-close {
+            background: rgba(255,255,255,0.15); border: none; color: white;
+            width: 36px; height: 36px; border-radius: 50%; font-size: 1rem;
+            cursor: pointer; transition: background 0.2s ease;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .track-modal-close:hover { background: rgba(255,255,255,0.3); }
+
+        .track-modal-body { padding: 28px; }
+
+        .track-search-wrap {
+            display: flex; gap: 10px; margin-bottom: 24px;
+        }
+        .track-input {
+            flex: 1; padding: 12px 18px;
+            border: 2px solid rgba(160,82,45,0.2); border-radius: 50px;
+            font-family: 'Lato', sans-serif; font-size: 0.92rem;
+            color: var(--text-dark); outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .track-input:focus {
+            border-color: var(--brown-accent);
+            box-shadow: 0 0 0 3px rgba(160,82,45,0.1);
+        }
+        .track-search-btn {
+            background: linear-gradient(135deg, var(--brown-mid), var(--brown-light));
+            color: white; border: none; padding: 12px 22px; border-radius: 50px;
+            font-family: 'Lato', sans-serif; font-size: 0.88rem; font-weight: 700;
+            cursor: pointer; transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(107,58,42,0.3);
+            white-space: nowrap;
+        }
+        .track-search-btn:hover {
+            transform: translateY(-2px); box-shadow: 0 8px 22px rgba(107,58,42,0.45);
+        }
+
+        /* order info card */
+        .track-order-card {
+            background: var(--cream); border-radius: 18px;
+            padding: 20px 22px; margin-bottom: 22px;
+            border: 1px solid rgba(160,82,45,0.12);
+            display: none;
+        }
+        .track-order-card.visible { display: block; animation: commentSlideIn 0.4s ease both; }
+        .track-order-meta {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            flex-wrap: wrap; gap: 10px; margin-bottom: 14px;
+        }
+        .track-order-id {
+            font-family: 'Playfair Display', serif; font-size: 1.1rem;
+            font-weight: 700; color: var(--brown-dark);
+        }
+        .track-status-pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 5px 14px; border-radius: 50px;
+            font-size: 0.78rem; font-weight: 700; letter-spacing: 0.3px;
+        }
+        .track-status-pill.preparing  { background: rgba(243,156,18,0.15); color: #e67e22; }
+        .track-status-pill.on-the-way { background: rgba(52,152,219,0.15); color: #2980b9; }
+        .track-status-pill.delivered  { background: rgba(39,174,96,0.15);  color: #27ae60; }
+        .track-status-pill.ready      { background: rgba(155,89,182,0.15); color: #8e44ad; }
+        .track-status-pill.cancelled  { background: rgba(231,76,60,0.15);  color: #c0392b; }
+        .track-status-dot {
+            width: 8px; height: 8px; border-radius: 50%; background: currentColor;
+            animation: pulseDot 1.5s ease-in-out infinite;
+        }
+        @keyframes pulseDot {
+            0%,100% { opacity: 1; transform: scale(1); }
+            50%      { opacity: 0.5; transform: scale(0.7); }
+        }
+        .track-items-list {
+            font-size: 0.84rem; color: var(--text-mid);
+            border-top: 1px solid rgba(160,82,45,0.12); padding-top: 12px;
+            margin-bottom: 4px;
+        }
+        .track-items-list span { display: block; margin-bottom: 4px; }
+        .track-order-footer {
+            display: flex; justify-content: space-between;
+            font-size: 0.8rem; color: var(--brown-accent);
+            border-top: 1px solid rgba(160,82,45,0.12); padding-top: 10px;
+            margin-top: 10px;
+        }
+        .track-order-total { font-weight: 700; color: var(--brown-dark); }
+
+        /* timeline */
+        .track-timeline { display: none; }
+        .track-timeline.visible { display: block; }
+        .track-timeline-title {
+            font-family: 'Playfair Display', serif; font-size: 1rem;
+            color: var(--brown-dark); margin-bottom: 18px; font-weight: 700;
+        }
+        .timeline-steps { position: relative; padding-left: 28px; }
+        .timeline-steps::before {
+            content: ''; position: absolute; left: 10px; top: 10px;
+            bottom: 10px; width: 2px;
+            background: rgba(160,82,45,0.12); border-radius: 2px;
+        }
+        .timeline-step {
+            position: relative; margin-bottom: 22px; opacity: 0.38;
+            transition: opacity 0.3s ease;
+        }
+        .timeline-step.done, .timeline-step.active { opacity: 1; }
+        .timeline-step-icon {
+            position: absolute; left: -28px; top: 0;
+            width: 22px; height: 22px; border-radius: 50%;
+            background: rgba(160,82,45,0.15); border: 2px solid rgba(160,82,45,0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.62rem; color: var(--brown-accent);
+            transition: all 0.3s ease;
+        }
+        .timeline-step.done .timeline-step-icon {
+            background: #27ae60; border-color: #27ae60; color: white;
+        }
+        .timeline-step.active .timeline-step-icon {
+            background: var(--gold); border-color: var(--gold); color: var(--brown-dark);
+            box-shadow: 0 0 0 4px rgba(212,168,67,0.2);
+            animation: activeGlow 1.4s ease-in-out infinite;
+        }
+        @keyframes activeGlow {
+            0%,100% { box-shadow: 0 0 0 4px rgba(212,168,67,0.2); }
+            50%      { box-shadow: 0 0 0 8px rgba(212,168,67,0.08); }
+        }
+        .timeline-step-label {
+            font-weight: 700; font-size: 0.88rem; color: var(--brown-dark); margin-bottom: 2px;
+        }
+        .timeline-step-sub {
+            font-size: 0.78rem; color: var(--brown-accent); opacity: 0.85;
+        }
+        .timeline-step.active .timeline-step-label { color: var(--brown-mid); }
+
+        /* empty/error state */
+        .track-empty {
+            text-align: center; padding: 30px 0; color: var(--brown-accent);
+            display: none;
+        }
+        .track-empty.visible { display: block; animation: commentSlideIn 0.4s ease both; }
+        .track-empty i { font-size: 2.4rem; margin-bottom: 10px; opacity: 0.5; }
+        .track-empty p { font-size: 0.9rem; }
+
+        /* recent orders hint */
+        .track-recent {
+            background: rgba(212,168,67,0.08); border: 1px solid rgba(212,168,67,0.2);
+            border-radius: 14px; padding: 14px 18px; margin-bottom: 20px;
+        }
+        .track-recent-title {
+            font-size: 0.78rem; font-weight: 700; color: var(--brown-mid);
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+        }
+        .recent-order-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: white; border: 1px solid rgba(160,82,45,0.2);
+            border-radius: 50px; padding: 5px 12px; font-size: 0.78rem;
+            color: var(--brown-mid); cursor: pointer; margin-right: 6px; margin-bottom: 6px;
+            transition: all 0.2s ease; font-family: 'Lato', sans-serif;
+        }
+        .recent-order-chip:hover {
+            background: var(--cream); border-color: var(--brown-accent);
+            color: var(--brown-dark);
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== COFFEE POUR INTRO ANIMATION ========== -->
+<div id="coffeeIntro" style="
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: #1a0a00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+">
+    <!-- Steam particles -->
+    <div id="steamContainer" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;"></div>
+
+    <!-- Ambient glow -->
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%, rgba(160,82,45,0.18) 0%, transparent 65%);pointer-events:none;"></div>
+
+    <svg id="coffeeSVG" viewBox="0 0 400 480" xmlns="http://www.w3.org/2000/svg" style="width:min(380px,88vw);height:auto;overflow:visible;filter:drop-shadow(0 30px 60px rgba(0,0,0,0.7));">
+        <defs>
+            <!-- Cup gradient -->
+            <linearGradient id="cupGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#5C2E0A"/>
+                <stop offset="50%" stop-color="#3E1C00"/>
+                <stop offset="100%" stop-color="#2A1000"/>
+            </linearGradient>
+            <!-- Coffee liquid gradient -->
+            <linearGradient id="coffeeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#6B3A2A"/>
+                <stop offset="100%" stop-color="#3E1C00"/>
+            </linearGradient>
+            <!-- Cream gradient -->
+            <linearGradient id="creamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#F5E6C8"/>
+                <stop offset="100%" stop-color="#D4A843"/>
+            </linearGradient>
+            <!-- Saucer gradient -->
+            <linearGradient id="saucerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#4A2200"/>
+                <stop offset="100%" stop-color="#2A1000"/>
+            </linearGradient>
+            <!-- Pour stream gradient -->
+            <linearGradient id="pourGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#8B4513" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#5C2E0A" stop-opacity="0.7"/>
+            </linearGradient>
+            <!-- Cream stream gradient -->
+            <linearGradient id="creamStreamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#FFF8F0" stop-opacity="0.95"/>
+                <stop offset="100%" stop-color="#E8C87A" stop-opacity="0.8"/>
+            </linearGradient>
+            <!-- Clip for cup interior -->
+            <clipPath id="cupClip">
+                <path d="M 115 200 Q 110 360 125 370 Q 200 388 275 370 Q 290 360 285 200 Z"/>
+            </clipPath>
+            <!-- Highlight gradient -->
+            <linearGradient id="cupHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.12)"/>
+                <stop offset="40%" stop-color="rgba(255,255,255,0.04)"/>
+                <stop offset="100%" stop-color="rgba(0,0,0,0.15)"/>
+            </linearGradient>
+        </defs>
+
+        <!-- Saucer shadow -->
+        <ellipse cx="200" cy="410" rx="110" ry="14" fill="rgba(0,0,0,0.4)"/>
+
+        <!-- Saucer -->
+        <ellipse cx="200" cy="400" rx="105" ry="13" fill="url(#saucerGrad)"/>
+        <ellipse cx="200" cy="397" rx="95" ry="9" fill="#3E1C00"/>
+        <ellipse cx="200" cy="395" rx="75" ry="6" fill="#4A2200" opacity="0.6"/>
+
+        <!-- Cup body -->
+        <path d="M 115 200 Q 110 360 125 370 Q 200 388 275 370 Q 290 360 285 200 Z" fill="url(#cupGrad)"/>
+        <!-- Cup highlight -->
+        <path d="M 115 200 Q 110 360 125 370 Q 200 388 275 370 Q 290 360 285 200 Z" fill="url(#cupHighlight)"/>
+        <!-- Cup inner shadow left -->
+        <path d="M 115 200 Q 112 300 120 360 Q 140 375 160 375 Q 130 340 125 200 Z" fill="rgba(0,0,0,0.2)"/>
+
+        <!-- Cup top rim -->
+        <ellipse cx="200" cy="200" rx="85" ry="12" fill="#5C2E0A"/>
+        <ellipse cx="200" cy="198" rx="83" ry="10" fill="#3E1C00"/>
+
+        <!-- Coffee liquid fill (animated height) -->
+        <g clip-path="url(#cupClip)">
+            <!-- Coffee base -->
+            <rect id="coffeeLiquid" x="120" y="370" width="160" height="0" fill="url(#coffeeGrad)">
+                <animate attributeName="y" from="370" to="210" dur="1.8s" begin="0.3s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+                <animate attributeName="height" from="0" to="160" dur="1.8s" begin="0.3s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+            </rect>
+
+            <!-- Coffee surface shimmer -->
+            <ellipse id="coffeeSurface" cx="200" cy="370" rx="78" ry="8" fill="#8B5A2B" opacity="0">
+                <animate attributeName="cy" from="370" to="214" dur="1.8s" begin="0.3s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+                <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="0.3s" fill="freeze"/>
+            </ellipse>
+
+            <!-- Cream layer (appears after cream pour) -->
+            <rect id="creamLayer" x="120" y="370" width="160" height="0" fill="url(#creamGrad)" opacity="0.85">
+                <animate attributeName="y" from="370" to="204" dur="0.8s" begin="2.6s" fill="freeze"/>
+                <animate attributeName="height" from="0" to="10" dur="0.8s" begin="2.6s" fill="freeze"/>
+            </rect>
+
+            <!-- Cream swirl art (latte art) -->
+            <g id="latteArt" opacity="0">
+                <animate attributeName="opacity" from="0" to="1" dur="0.6s" begin="3.4s" fill="freeze"/>
+                <!-- Heart latte art -->
+                <path d="M200 230 C195 218,178 218,178 232 C178 246,200 258,200 258 C200 258,222 246,222 232 C222 218,205 218,200 230 Z" 
+                      fill="none" stroke="rgba(245,230,200,0.6)" stroke-width="1.5" opacity="0.8"/>
+                <!-- Rosetta spiral -->
+                <path d="M185 242 Q190 238 195 242 Q200 238 205 242 Q210 238 215 242" 
+                      fill="none" stroke="rgba(245,230,200,0.45)" stroke-width="1.2"/>
+            </g>
+        </g>
+
+        <!-- Cup handle -->
+        <path d="M 280 260 Q 330 260 330 300 Q 330 340 280 340" fill="none" stroke="#4A2200" stroke-width="18" stroke-linecap="round"/>
+        <path d="M 280 260 Q 322 262 322 300 Q 322 338 280 340" fill="none" stroke="#6B3A2A" stroke-width="10" stroke-linecap="round"/>
+        <!-- Handle highlight -->
+        <path d="M 283 270 Q 316 272 316 300 Q 316 328 283 330" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4" stroke-linecap="round"/>
+
+        <!-- === COFFEE POUR STREAM (kettle/pot from top-right) === -->
+        <!-- Kettle spout -->
+        <g id="kettleGroup" opacity="0">
+            <animate attributeName="opacity" from="0" to="1" dur="0.2s" begin="0s" fill="freeze"/>
+            <!-- Kettle body -->
+            <ellipse cx="355" cy="55" rx="38" ry="28" fill="#2A1000"/>
+            <ellipse cx="355" cy="53" rx="36" ry="25" fill="#3E1C00"/>
+            <ellipse cx="355" cy="51" rx="34" ry="22" fill="#4A2200"/>
+            <!-- Kettle shine -->
+            <ellipse cx="348" cy="44" rx="12" ry="7" fill="rgba(255,255,255,0.08)" transform="rotate(-20,348,44)"/>
+            <!-- Kettle spout -->
+            <path d="M 330 65 Q 300 90 270 120 Q 258 135 252 148" fill="none" stroke="#3E1C00" stroke-width="11" stroke-linecap="round"/>
+            <path d="M 330 65 Q 300 90 270 120 Q 258 135 252 148" fill="none" stroke="#5C2E0A" stroke-width="7" stroke-linecap="round"/>
+            <!-- Spout tip -->
+            <circle cx="252" cy="150" r="5" fill="#6B3A2A"/>
+            <!-- Kettle handle -->
+            <path d="M 360 30 Q 400 30 400 55 Q 400 80 360 80" fill="none" stroke="#2A1000" stroke-width="10" stroke-linecap="round"/>
+            <path d="M 360 30 Q 395 32 395 55 Q 395 78 360 80" fill="none" stroke="#4A2200" stroke-width="5" stroke-linecap="round"/>
+        </g>
+
+        <!-- Coffee pour stream -->
+        <g id="coffePourStream" opacity="0">
+            <animate attributeName="opacity" from="0" to="1" dur="0.15s" begin="0.25s" fill="freeze"/>
+            <animateTransform attributeName="transform" type="translate" from="0 0" to="0 0" dur="1.8s" begin="0.25s" fill="freeze"/>
+            <!-- Main stream -->
+            <path id="streamPath" d="M 252 152 Q 248 165 242 178 Q 235 192 228 202" 
+                  fill="none" stroke="url(#pourGrad)" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
+            <!-- Stream highlight -->
+            <path d="M 251 152 Q 247 164 241 177 Q 234 191 227 201"
+                  fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3" stroke-linecap="round"/>
+            <!-- Splash droplets at base -->
+            <circle cx="226" cy="204" r="4" fill="#8B4513" opacity="0.6"/>
+            <circle cx="233" cy="207" r="2.5" fill="#8B4513" opacity="0.5"/>
+            <circle cx="220" cy="206" r="2" fill="#8B4513" opacity="0.4"/>
+
+            <!-- Stream fade out animation -->
+            <animate attributeName="opacity" from="1" to="0" dur="0.4s" begin="2.05s" fill="freeze"/>
+        </g>
+
+        <!-- Kettle tilts back after pour -->
+        <animateTransform id="kettleTilt" href="#kettleGroup" attributeName="transform" type="rotate"
+            values="0 355 55; -25 355 55; -25 355 55; 0 355 55"
+            keyTimes="0; 0.15; 0.7; 1"
+            dur="2.5s" begin="0s" fill="freeze"/>
+
+        <!-- === CREAM POUR (small pitcher from top-left) === -->
+        <g id="pitcherGroup" opacity="0">
+            <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="2.2s" fill="freeze"/>
+            <!-- Pitcher body -->
+            <path d="M 28 80 Q 28 55 48 48 Q 72 42 80 58 Q 88 72 82 95 Q 78 112 60 115 Q 38 115 28 95 Z" fill="#C8864E"/>
+            <path d="M 32 83 Q 32 60 50 54 Q 72 49 78 63 Q 84 75 79 95 Q 75 108 60 111 Q 40 111 32 96 Z" fill="#D4A843"/>
+            <!-- Pitcher spout -->
+            <path d="M 74 68 Q 90 65 98 72 Q 104 78 96 84 Q 90 78 76 76 Z" fill="#B8732E"/>
+            <!-- Pitcher handle -->
+            <path d="M 30 70 Q 10 70 10 90 Q 10 110 30 108" fill="none" stroke="#A0522D" stroke-width="8" stroke-linecap="round"/>
+            <path d="M 30 70 Q 14 72 14 90 Q 14 108 30 108" fill="none" stroke="#C8864E" stroke-width="4" stroke-linecap="round"/>
+            <!-- Pitcher shine -->
+            <ellipse cx="52" cy="64" rx="10" ry="5" fill="rgba(255,255,255,0.2)" transform="rotate(15,52,64)"/>
+        </g>
+
+        <!-- Cream stream -->
+        <g id="creamPourStream" opacity="0">
+            <animate attributeName="opacity" from="0" to="1" dur="0.2s" begin="2.5s" fill="freeze"/>
+            <!-- Main cream stream -->
+            <path d="M 96 78 Q 112 100 130 130 Q 152 162 168 185 Q 178 198 185 208"
+                  fill="none" stroke="url(#creamStreamGrad)" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+            <!-- Cream highlight -->
+            <path d="M 97 77 Q 113 99 131 129 Q 153 161 169 184 Q 179 197 186 207"
+                  fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Cream splash droplets -->
+            <circle cx="183" cy="210" r="4" fill="#F5E6C8" opacity="0.7"/>
+            <circle cx="190" cy="213" r="2.5" fill="#E8C87A" opacity="0.6"/>
+            <circle cx="177" cy="212" r="2" fill="#FFF8F0" opacity="0.5"/>
+
+            <!-- Cream stream fade -->
+            <animate attributeName="opacity" from="1" to="0" dur="0.5s" begin="3.3s" fill="freeze"/>
+        </g>
+
+        <!-- Pitcher tilt animation -->
+        <animateTransform href="#pitcherGroup" attributeName="transform" type="rotate"
+            values="0 60 90; 40 60 90; 40 60 90; 0 60 90"
+            keyTimes="0; 0.2; 0.75; 1"
+            dur="1.4s" begin="2.2s" fill="freeze"/>
+
+        <!-- Steam wisps above cup (appear after coffee settles) -->
+        <g id="steamGroup" opacity="0">
+            <animate attributeName="opacity" from="0" to="0.7" dur="0.5s" begin="2.0s" fill="freeze"/>
+            <path d="M 175 198 Q 168 178 175 162 Q 182 146 175 130" fill="none" stroke="rgba(255,248,240,0.5)" stroke-width="2.5" stroke-linecap="round">
+                <animateTransform attributeName="transform" type="translate" values="0 0; 0 -20" dur="2s" begin="2.0s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.5;0.2;0" dur="2s" begin="2.0s" repeatCount="indefinite"/>
+            </path>
+            <path d="M 200 195 Q 207 172 200 155 Q 193 138 200 122" fill="none" stroke="rgba(255,248,240,0.45)" stroke-width="2.5" stroke-linecap="round">
+                <animateTransform attributeName="transform" type="translate" values="0 0; 0 -22" dur="2.3s" begin="2.2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.45;0.2;0" dur="2.3s" begin="2.2s" repeatCount="indefinite"/>
+            </path>
+            <path d="M 225 198 Q 232 176 225 160 Q 218 144 225 128" fill="none" stroke="rgba(255,248,240,0.4)" stroke-width="2" stroke-linecap="round">
+                <animateTransform attributeName="transform" type="translate" values="0 0; 0 -18" dur="1.8s" begin="2.4s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.4;0.15;0" dur="1.8s" begin="2.4s" repeatCount="indefinite"/>
+            </path>
+        </g>
+
+        <!-- Brand text -->
+        <text x="200" y="455" text-anchor="middle" font-family="'Playfair Display', Georgia, serif" font-size="18" fill="#D4A843" letter-spacing="4" opacity="0">
+            Brew &amp; Bliss
+            <animate attributeName="opacity" from="0" to="1" dur="0.8s" begin="3.2s" fill="freeze"/>
+        </text>
+        <text x="200" y="472" text-anchor="middle" font-family="'Lato', sans-serif" font-size="9" fill="rgba(212,168,67,0.6)" letter-spacing="6" opacity="0">
+            ARTISAN CAFÉ
+            <animate attributeName="opacity" from="0" to="1" dur="0.8s" begin="3.5s" fill="freeze"/>
+        </text>
+    </svg>
+
+    <!-- Skip button -->
+    <div id="skipBtn" onclick="skipIntro()" style="
+        position:absolute;
+        bottom:32px;
+        right:36px;
+        color:rgba(212,168,67,0.55);
+        font-family:'Lato',sans-serif;
+        font-size:0.78rem;
+        letter-spacing:2px;
+        text-transform:uppercase;
+        cursor:pointer;
+        padding:8px 16px;
+        border:1px solid rgba(212,168,67,0.2);
+        border-radius:20px;
+        transition:all 0.3s ease;
+        opacity:0;
+        animation: fadeSkip 0.5s ease 1s forwards;
+    ">Skip ›</div>
+</div>
+
+<style>
+@keyframes fadeSkip {
+    to { opacity: 1; }
+}
+#skipBtn:hover {
+    color: rgba(212,168,67,0.9) !important;
+    border-color: rgba(212,168,67,0.5) !important;
+    background: rgba(212,168,67,0.06);
+}
+</style>
+
+<script>
+(function() {
+    // Auto-dismiss after animation completes (~4.2s)
+    var introTimer = setTimeout(function() { dismissIntro(); }, 4400);
+
+    function dismissIntro() {
+        var intro = document.getElementById('coffeeIntro');
+        if (!intro) return;
+        intro.style.opacity = '0';
+        intro.style.visibility = 'hidden';
+        document.body.style.overflow = '';
+        setTimeout(function() {
+            intro.style.display = 'none';
+        }, 800);
+    }
+
+    window.skipIntro = function() {
+        clearTimeout(introTimer);
+        dismissIntro();
+    };
+
+    // Lock scroll during intro
+    document.body.style.overflow = 'hidden';
+
+    // Floating steam particles in background
+    function createSteamParticle() {
+        var container = document.getElementById('steamContainer');
+        if (!container) return;
+        var p = document.createElement('div');
+        var size = Math.random() * 6 + 3;
+        var x = Math.random() * 100;
+        var delay = Math.random() * 3;
+        var dur = Math.random() * 4 + 5;
+        p.style.cssText = 'position:absolute;width:' + size + 'px;height:' + size + 'px;background:rgba(212,168,67,0.08);border-radius:50%;left:' + x + '%;bottom:-10px;animation:steamRise ' + dur + 's ' + delay + 's ease-in infinite;';
+        container.appendChild(p);
+    }
+
+    var style = document.createElement('style');
+    style.textContent = '@keyframes steamRise { 0%{transform:translateY(0) scale(1);opacity:0.08} 50%{opacity:0.15} 100%{transform:translateY(-100vh) scale(0.3);opacity:0} }';
+    document.head.appendChild(style);
+
+    for (var i = 0; i < 20; i++) createSteamParticle();
+})();
+</script>
+
+<!-- ========== HEADER / NAV ========== -->
+<header>
+    <nav>
+        <a href="#" class="logo">
+            <div class="logo-icon">☕</div>
+            <div class="logo-text">
+                <h1>Brew & Bliss</h1>
+                <span>Artisan Café</span>
+            </div>
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#coffees">Coffees</a></li>
+            <li><a href="#desserts">Desserts</a></li>
+            <li><a href="#snacks">Snacks</a></li>
+            <li><a href="#offers" class="nav-offer-btn">🏷️ Offers</a></li>
+            <li><a href="#" onclick="openTrackModal();return false;" style="color:rgba(255,255,255,0.85);"><i class="fas fa-map-marker-alt"></i> Track Order</a></li>
+            <li><a href="#" onclick="openCart();return false;" style="background:linear-gradient(135deg,var(--gold),#E8B850);color:var(--brown-dark)!important;font-weight:700;padding:9px 18px;border-radius:25px;"><i class="fas fa-shopping-bag"></i> Cart <span id="navCartCount" style="display:none;background:var(--brown-dark);color:white;border-radius:50%;padding:1px 6px;font-size:0.72rem;margin-left:3px;">0</span></a></li>
+        </ul>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+</header>
+
+<!-- ========== HERO ========== -->
+<section class="hero" id="home">
+    <div class="hero-bg">
+        <div class="hero-bg-fallback"></div>
+        <video autoplay muted loop playsinline preload="auto">
+            <source src="Firefly_Cream_being_pourd_in_coffee____for_webpage_animation__285565.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-badge">✦ Since 2018 · Premium Artisan Café ✦</div>
+        <h1 class="hero-title">Every Sip Tells<br>a <span>Story</span></h1>
+        <p class="hero-subtitle">Crafted with love · Served with warmth</p>
+        <div class="hero-btns">
+            <a href="#coffees" class="btn-primary">Explore Menu</a>
+            <a href="#offers" class="btn-secondary">Today's Offers</a>
+        </div>
+    </div>
+    <div class="hero-scroll">
+        <i class="fas fa-chevron-down"></i>
+    </div>
+</section>
+
+<!-- ========== STATS ========== -->
+<div class="stats-bar">
+    <div class="stats-inner">
+        <div class="stat-item">
+            <span class="stat-num">50+</span>
+            <span class="stat-label">Menu Items</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num">1K+</span>
+            <span class="stat-label">Happy Guests</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num">15+</span>
+            <span class="stat-label">Coffee Blends</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num">6yr</span>
+            <span class="stat-label">Of Excellence</span>
+        </div>
+    </div>
+</div>
+
+<!-- ========== OFFERS ========== -->
+<section id="offers">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">🏷️ Limited Time</div>
+            <h2 class="section-title">Today's Special Offers</h2>
+            <div class="section-divider"></div>
+        </div>
+        <div class="offers-grid">
+            <div class="offer-card">
+                <div class="offer-img">
+                    <img src="morning bliss combo.jpg" alt="Coffee Combo">
+                    <div class="offer-badge">30% OFF</div>
+                </div>
+                <div class="offer-body">
+                    <h3>Morning Bliss Combo</h3>
+                    <p>Espresso + Croissant + Fresh OJ — the perfect way to kickstart your day.</p>
+                    <div class="offer-price-row">
+                        <span class="offer-old-price">$14.99</span>
+                        <span class="offer-new-price">$10.49</span>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <button class="offer-add-btn" onclick="addToCart(this)" data-price="$10.49" data-icon="fas fa-tag">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="offer-card">
+                <div class="offer-img">
+                    <img src="sweat deals.jpg" alt="Dessert Delight">
+                    <div class="offer-badge">BUY 1 GET 1</div>
+                </div>
+                <div class="offer-body">
+                    <h3>Sweet Twins Deal</h3>
+                    <p>Any two desserts from our signature dessert board at the price of one.</p>
+                    <div class="offer-price-row">
+                        <span class="offer-old-price">$12.00</span>
+                        <span class="offer-new-price">$6.00</span>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <button class="offer-add-btn" onclick="addToCart(this)" data-price="$6.00" data-icon="fas fa-tag">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="offer-card">
+                <div class="offer-img">
+                    <img src="snack bundle.png" alt="Snack Bundle">
+                    <div class="offer-badge">25% OFF</div>
+                </div>
+                <div class="offer-body">
+                    <h3>Snack & Sip Bundle</h3>
+                    <p>Any sandwich or burger with a cold brew or iced latte of your choice.</p>
+                    <div class="offer-price-row">
+                        <span class="offer-old-price">$16.00</span>
+                        <span class="offer-new-price">$11.99</span>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <button class="offer-add-btn" onclick="addToCart(this)" data-price="$11.99" data-icon="fas fa-tag">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== COFFEES ========== -->
+<section id="coffees" style="background: var(--white);">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">☕ Our Specialty</div>
+            <h2 class="section-title">Crafted Coffees</h2>
+            <div class="section-divider"></div>
+        </div>
+        <div class="menu-grid">
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="Classic Espresso.jpg" alt="Espresso">
+                    <div class="card-category">Espresso</div>
+                </div>
+                <div class="card-body">
+                    <h3>Classic Espresso</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Arabica Beans</span>
+                        <span class="ingredient-tag">Hot Water</span>
+                        <span class="ingredient-tag">Cream Foam</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$3.99" data-icon="fas fa-mug-hot">
+                            <i class="fas fa-mug-hot"></i>
+                            <span>$3.99</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span>(4.9)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="Velvety Cappuccino.webp" alt="Cappuccino">
+                    <div class="card-category">Cappuccino</div>
+                </div>
+                <div class="card-body">
+                    <h3>Velvety Cappuccino</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Espresso Shot</span>
+                        <span class="ingredient-tag">Steamed Milk</span>
+                        <span class="ingredient-tag">Milk Foam</span>
+                        <span class="ingredient-tag">Cocoa Dust</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$4.99" data-icon="fas fa-mug-hot">
+                            <i class="fas fa-mug-hot"></i>
+                            <span>$4.99</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span>(4.8)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="Caramel Latte.jpg" alt="Latte">
+                    <div class="card-category">Latte</div>
+                </div>
+                <div class="card-body">
+                    <h3>Caramel Latte</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Double Espresso</span>
+                        <span class="ingredient-tag">Whole Milk</span>
+                        <span class="ingredient-tag">Caramel Syrup</span>
+                        <span class="ingredient-tag">Vanilla</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$5.49" data-icon="fas fa-mug-hot">
+                            <i class="fas fa-mug-hot"></i>
+                            <span>$5.49</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span>(4.7)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="Cold Brew.jpg" alt="Cold Brew">
+                    <div class="card-category">Cold Brew</div>
+                </div>
+                <div class="card-body">
+                    <h3>Signature Cold Brew</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Cold-Steeped Coffee</span>
+                        <span class="ingredient-tag">Ice</span>
+                        <span class="ingredient-tag">Oat Milk</span>
+                        <span class="ingredient-tag">Brown Sugar</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$5.99" data-icon="fas fa-mug-hot">
+                            <i class="fas fa-mug-hot"></i>
+                            <span>$5.99</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span>(5.0)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="Dark Chocolate Mocha.webp" alt="Mocha">
+                    <div class="card-category">Mocha</div>
+                </div>
+                <div class="card-body">
+                    <h3>Dark Chocolate Mocha</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Espresso</span>
+                        <span class="ingredient-tag">Dark Chocolate</span>
+                        <span class="ingredient-tag">Steamed Milk</span>
+                        <span class="ingredient-tag">Whipped Cream</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$5.79" data-icon="fas fa-mug-hot">
+                            <i class="fas fa-mug-hot"></i>
+                            <span>$5.79</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span>(4.9)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="Matcha Cloud Latte.jpg" alt="Matcha Latte">
+                    <div class="card-category">Specialty</div>
+                </div>
+                <div class="card-body">
+                    <h3>Matcha Cloud Latte</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Ceremonial Matcha</span>
+                        <span class="ingredient-tag">Oat Milk</span>
+                        <span class="ingredient-tag">Honey</span>
+                        <span class="ingredient-tag">Vanilla Foam</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$6.29" data-icon="fas fa-mug-hot">
+                            <i class="fas fa-mug-hot"></i>
+                            <span>$6.29</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span>(4.6)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ========== GALLERY STRIP ========== -->
+<div class="gallery-strip">
+    <img src="Cafe image 1.jpg" alt="Café Interior">
+    <img src="Cafe image 2.jpg" alt="Coffee Art">
+    <img src="Cafe image 3.jpg" alt="Desserts">
+    <img src="Cafe image 4.jpg" alt="Food">
+    <img src="image 4.jpg" alt="Café Vibe">
+</div>
+
+<!-- ========== DESSERTS ========== -->
+<section id="desserts" style="background: var(--cream);">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">🍰 Sweet Treats</div>
+            <h2 class="section-title">Heavenly Desserts</h2>
+            <div class="section-divider"></div>
+        </div>
+        <div class="menu-grid">
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="Belgian cake.jpeg" alt="Chocolate Cake">
+                    <div class="card-category">Cake</div>
+                </div>
+                <div class="card-body">
+                    <h3>Belgian Chocolate Cake</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Belgian Cocoa</span>
+                        <span class="ingredient-tag">Butter Cream</span>
+                        <span class="ingredient-tag">Ganache</span>
+                        <span class="ingredient-tag">Raspberries</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$6.99" data-icon="fas fa-cookie-bite">
+                            <i class="fas fa-cookie-bite"></i>
+                            <span>$6.99</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><span>(4.9)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="Mary-Berry-New-York-Cheesecake-with-Strawberries-Recipe.webp" alt="Cheesecake">
+                    <div class="card-category">Cheesecake</div>
+                </div>
+                <div class="card-body">
+                    <h3>NY Strawberry Cheesecake</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Cream Cheese</span>
+                        <span class="ingredient-tag">Graham Base</span>
+                        <span class="ingredient-tag">Strawberry Jam</span>
+                        <span class="ingredient-tag">Vanilla</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$7.49" data-icon="fas fa-cookie-bite">
+                            <i class="fas fa-cookie-bite"></i>
+                            <span>$7.49</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i><span>(4.7)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="Tiramisu.jpg" alt="Tiramisu">
+                    <div class="card-category">Italian</div>
+                </div>
+                <div class="card-body">
+                    <h3>Classic Tiramisu</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Mascarpone</span>
+                        <span class="ingredient-tag">Espresso</span>
+                        <span class="ingredient-tag">Ladyfingers</span>
+                        <span class="ingredient-tag">Cocoa Powder</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$6.49" data-icon="fas fa-cookie-bite">
+                            <i class="fas fa-cookie-bite"></i>
+                            <span>$6.49</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><span>(5.0)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="belgiium stack.jpg" alt="Waffle">
+                    <div class="card-category">Waffle</div>
+                </div>
+                <div class="card-body">
+                    <h3>Belgian Waffle Stack</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Buttermilk Batter</span>
+                        <span class="ingredient-tag">Maple Syrup</span>
+                        <span class="ingredient-tag">Fresh Berries</span>
+                        <span class="ingredient-tag">Whipped Cream</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$8.99" data-icon="fas fa-cookie-bite">
+                            <i class="fas fa-cookie-bite"></i>
+                            <span>$8.99</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><span>(4.8)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="french desert.webp" alt="Macaron">
+                    <div class="card-category">French</div>
+                </div>
+                <div class="card-body">
+                    <h3>French Macaron Box</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Almond Flour</span>
+                        <span class="ingredient-tag">Egg Whites</span>
+                        <span class="ingredient-tag">Buttercream</span>
+                        <span class="ingredient-tag">Assorted Flavors</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$9.99" data-icon="fas fa-cookie-bite">
+                            <i class="fas fa-cookie-bite"></i>
+                            <span>$9.99</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i><span>(4.6)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="cinamen roll.webp" alt="Cinnamon Roll">
+                    <div class="card-category">Baked</div>
+                </div>
+                <div class="card-body">
+                    <h3>Warm Cinnamon Roll</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Brioche Dough</span>
+                        <span class="ingredient-tag">Cinnamon Sugar</span>
+                        <span class="ingredient-tag">Cream Cheese Icing</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$4.99" data-icon="fas fa-cookie-bite">
+                            <i class="fas fa-cookie-bite"></i>
+                            <span>$4.99</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><span>(4.9)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ========== SNACKS ========== -->
+<section id="snacks" style="background: var(--white);">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">🥪 Savory Bites</div>
+            <h2 class="section-title">Snacks & Bites</h2>
+            <div class="section-divider"></div>
+        </div>
+        <div class="menu-grid">
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="cafe classic burger.jpg" alt="Classic Burger">
+                    <div class="card-category">Burger</div>
+                </div>
+                <div class="card-body">
+                    <h3>Café Classic Burger</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Brioche Bun</span>
+                        <span class="ingredient-tag">Beef Patty</span>
+                        <span class="ingredient-tag">Cheddar</span>
+                        <span class="ingredient-tag">Lettuce</span>
+                        <span class="ingredient-tag">Tomato</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$10.99" data-icon="fas fa-burger">
+                            <i class="fas fa-burger"></i>
+                            <span>$10.99</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><span>(4.9)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="Smoky BBQ Burger.jpg" alt="BBQ Burger">
+                    <div class="card-category">Burger</div>
+                </div>
+                <div class="card-body">
+                    <h3>Smoky BBQ Burger</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Sesame Bun</span>
+                        <span class="ingredient-tag">Smoked Patty</span>
+                        <span class="ingredient-tag">BBQ Sauce</span>
+                        <span class="ingredient-tag">Caramelized Onion</span>
+                        <span class="ingredient-tag">Jalapeño</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$12.49" data-icon="fas fa-burger">
+                            <i class="fas fa-burger"></i>
+                            <span>$12.49</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i><span>(4.7)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="club house sandwitch.jpg" alt="Club Sandwich">
+                    <div class="card-category">Sandwich</div>
+                </div>
+                <div class="card-body">
+                    <h3>Club House Sandwich</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Sourdough Bread</span>
+                        <span class="ingredient-tag">Grilled Chicken</span>
+                        <span class="ingredient-tag">Bacon</span>
+                        <span class="ingredient-tag">Avocado</span>
+                        <span class="ingredient-tag">Mayo</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$9.99" data-icon="fas fa-sandwich">
+                            <i class="fas fa-sandwich"></i>
+                            <span>$9.99</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><span>(4.8)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="garden-fresh-sandwich.jpg" alt="Veggie Sandwich">
+                    <div class="card-category">Sandwich</div>
+                </div>
+                <div class="card-body">
+                    <h3>Garden Fresh Sandwich</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Multigrain Bread</span>
+                        <span class="ingredient-tag">Hummus</span>
+                        <span class="ingredient-tag">Roasted Veggies</span>
+                        <span class="ingredient-tag">Feta Cheese</span>
+                        <span class="ingredient-tag">Arugula</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$8.49" data-icon="fas fa-sandwich">
+                            <i class="fas fa-sandwich"></i>
+                            <span>$8.49</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><span>(4.7)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="Italian Grilled Panini.jpg" alt="Panini">
+                    <div class="card-category">Panini</div>
+                </div>
+                <div class="card-body">
+                    <h3>Italian Grilled Panini</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Ciabatta</span>
+                        <span class="ingredient-tag">Mozzarella</span>
+                        <span class="ingredient-tag">Salami</span>
+                        <span class="ingredient-tag">Sun-dried Tomato</span>
+                        <span class="ingredient-tag">Basil Pesto</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$9.49" data-icon="fas fa-sandwich">
+                            <i class="fas fa-sandwich"></i>
+                            <span>$9.49</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i><span>(4.6)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <div class="card-img">
+                    <img src="Truffle Parmesan Fries.jpg" alt="Fries">
+                    <div class="card-category">Sides</div>
+                </div>
+                <div class="card-body">
+                    <h3>Truffle Parmesan Fries</h3>
+                    <div class="ingredients">
+                        <span class="ingredient-tag">Russet Potatoes</span>
+                        <span class="ingredient-tag">Truffle Oil</span>
+                        <span class="ingredient-tag">Parmesan</span>
+                        <span class="ingredient-tag">Herbs</span>
+                        <span class="ingredient-tag">Sea Salt</span>
+                    </div>
+                    <div class="card-footer">
+                        <button class="add-to-cart-btn" onclick="addToCart(this)" data-price="$5.99" data-icon="fas fa-utensils">
+                            <i class="fas fa-utensils"></i>
+                            <span>$5.99</span>
+                        </button>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i><span>(4.9)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ========== TESTIMONIALS ========== -->
+<section id="testimonials">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">💬 Guest Reviews</div>
+            <h2 class="section-title">What Our Guests Say</h2>
+            <div class="section-divider"></div>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="quote-icon">"</div>
+                <p class="testimonial-text">The tiramisu here is hands down the best I've ever had. The coffee is perfectly brewed and the ambience is so cozy. My absolute favourite spot in the city!</p>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="author-avatar" alt="Sarah">
+                    <div class="author-info">
+                        <h4>Sarah Mitchell</h4>
+                        <p>⭐⭐⭐⭐⭐ Regular Guest</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="quote-icon">"</div>
+                <p class="testimonial-text">Their cold brew is unreal — smooth, rich, and never too bitter. The truffle fries paired with it? Perfection. I come here every weekend!</p>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="author-avatar" alt="James">
+                    <div class="author-info">
+                        <h4>James Thornton</h4>
+                        <p>⭐⭐⭐⭐⭐ Coffee Enthusiast</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="quote-icon">"</div>
+                <p class="testimonial-text">Best macarons outside of Paris. The Belgian waffle stack is divine. Great service, beautiful interiors, and prices that don't break the bank.</p>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" class="author-avatar" alt="Priya">
+                    <div class="author-info">
+                        <h4>Emma Jones </h4>
+                        <p>⭐⭐⭐⭐⭐ Food Blogger</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ========== COMMENTS SECTION ========== -->
+<section id="comments" style="background: var(--white); padding: 80px 20px;">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">💬 Join the Conversation</div>
+            <h2 class="section-title">Guest Comments</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <!-- Comment Input Box -->
+        <div class="comment-form-wrapper">
+            <div class="comment-avatar-placeholder">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="comment-input-area">
+                <input
+                    type="text"
+                    id="commentName"
+                    class="comment-name-input"
+                    placeholder="Your name..."
+                    maxlength="40"
+                />
+                <textarea
+                    id="commentText"
+                    class="comment-textarea"
+                    placeholder="Share your experience at Brew & Bliss... ☕"
+                    rows="3"
+                    maxlength="400"
+                ></textarea>
+                <div class="comment-form-footer">
+                    <span id="charCount" class="char-counter">0 / 400</span>
+                    <button class="comment-submit-btn" onclick="submitComment()">
+                        <i class="fas fa-paper-plane"></i> Post Comment
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comments List -->
+        <div id="commentsContainer" class="comments-list-wrapper">
+            <!-- Comments render here dynamically -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyComments" class="empty-comments">
+            <div class="empty-icon">☕</div>
+            <p>Be the first to leave a comment!</p>
+        </div>
+    </div>
+</section>
+<!-- ========== FOOTER ========== -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <div class="logo">
+                <div class="logo-icon">☕</div>
+                <div class="logo-text">
+                    <h1>Brew & Bliss</h1>
+                    <span>Artisan Café</span>
+                </div>
+            </div>
+            <p>Crafting memorable moments one cup at a time. Freshly brewed, lovingly made — your neighbourhood escape since 2018.</p>
+            <div class="footer-social">
+                <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-btn"><i class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="#coffees">Coffees</a></li>
+                <li><a href="#desserts">Desserts</a></li>
+                <li><a href="#snacks">Snacks & Bites</a></li>
+                <li><a href="#offers">Today's Offers</a></li>
+                <li><a href="#testimonials">Reviews</a></li>
+            </ul>
+        </div>
+        <div class="footer-col footer-hours">
+            <h4>Opening Hours</h4>
+            <div><span>Mon – Fri</span><span>7am – 9pm</span></div>
+            <div><span>Saturday</span><span>8am – 10pm</span></div>
+            <div><span>Sunday</span><span>9am – 8pm</span></div>
+        </div>
+        <div class="footer-col">
+            <h4>Find Us</h4>
+            <ul>
+                <li><a href="#"><i class="fas fa-map-marker-alt" style="margin-right:6px;color:var(--gold)"></i>12 Bloom Street, City</a></li>
+                <li><a href="#"><i class="fas fa-phone" style="margin-right:6px;color:var(--gold)"></i>+1 (555) 234-5678</a></li>
+                <li><a href="#"><i class="fas fa-envelope" style="margin-right:6px;color:var(--gold)"></i>hello@brewbliss.com</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2025 Brew & Bliss Artisan Café. All rights reserved. Made with ❤️ and lots of coffee.</p>
+    </div>
+</footer>
+
+<!-- ========== FLOATING CART ========== -->
+<button onclick="openCart()" class="floating-cart" style="border:none;cursor:pointer;" aria-label="Open cart">
+    <i class="fas fa-shopping-bag"></i>
+    <div class="cart-badge" id="cartBadge" style="display:none;">0</div>
+</button>
+
+<!-- ========== CART DRAWER ========== -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+    <div class="cart-drawer-header">
+        <h2><i class="fas fa-shopping-bag" style="margin-right:10px;opacity:0.8"></i>Your Order</h2>
+        <button class="cart-close-btn" onclick="closeCart()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="cart-items-list" id="cartItemsList">
+        <!-- Rendered by updateCartUI() -->
+    </div>
+    <div class="cart-footer" id="cartFooter" style="display:none;">
+        <div class="cart-summary-row"><span>Subtotal</span><span id="cartSubtotal">$0.00</span></div>
+        <div class="cart-summary-row"><span>Delivery fee</span><span id="cartDelivery">$2.50</span></div>
+        <div class="cart-summary-row"><span>Tax (8%)</span><span id="cartTax">$0.00</span></div>
+        <div class="cart-summary-row total"><span>Total</span><span id="cartTotal">$0.00</span></div>
+        <button class="cart-checkout-btn" onclick="openOrderModal()">
+            <i class="fas fa-lock"></i> Proceed to Checkout
+        </button>
+    </div>
+</div>
+
+<!-- ========== ORDER MODAL ========== -->
+<div class="modal-overlay" id="orderModalOverlay">
+    <div class="order-modal">
+        <div class="modal-header">
+            <h2 id="modalTitle">Delivery Details</h2>
+            <button class="modal-close" onclick="closeOrderModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-steps">
+            <div class="modal-step-indicator">
+                <div class="step-dot active" id="step1dot">1</div>
+                <div class="step-label">Details</div>
+            </div>
+            <div class="modal-step-indicator">
+                <div class="step-dot" id="step2dot">2</div>
+                <div class="step-label">Payment</div>
+            </div>
+        </div>
+        <div class="modal-body">
+            <!-- Step 1: Delivery Info -->
+            <div class="modal-panel active" id="modalStep1">
+                <div class="delivery-type-btns">
+                    <button class="delivery-type-btn active" onclick="setDelivery('delivery',this)">
+                        <i class="fas fa-motorcycle"></i> Home Delivery
+                    </button>
+                    <button class="delivery-type-btn" onclick="setDelivery('pickup',this)">
+                        <i class="fas fa-store"></i> Pickup
+                    </button>
+                </div>
+                <div id="deliveryFields">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input class="form-input" id="fname" placeholder="John" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input class="form-input" id="lname" placeholder="Doe" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input class="form-input" id="phone" placeholder="+1 (555) 000-0000" type="tel">
+                    </div>
+                    <div class="form-group" id="addressGroup">
+                        <label>Delivery Address</label>
+                        <input class="form-input" id="address" placeholder="123 Main Street, Apt 4B" type="text">
+                    </div>
+                    <div class="form-row" id="cityStateGroup">
+                        <div class="form-group">
+                            <label>City</label>
+                            <input class="form-input" id="city" placeholder="New York" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label>Zip Code</label>
+                            <input class="form-input" id="zip" placeholder="10001" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Special Instructions (optional)</label>
+                        <input class="form-input" id="notes" placeholder="Ring doorbell, leave at door, etc." type="text">
+                    </div>
+                </div>
+                <div class="modal-nav">
+                    <button class="modal-next-btn" onclick="goToPayment()">
+                        Continue to Payment <i class="fas fa-arrow-right" style="margin-left:6px"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Payment -->
+            <div class="modal-panel" id="modalStep2">
+                <div class="order-summary-mini">
+                    <h4>Order Summary</h4>
+                    <div id="paymentSummaryItems"></div>
+                    <div class="summary-item total">
+                        <span>Total (incl. tax + delivery)</span>
+                        <span id="paymentTotal">$0.00</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <div class="payment-methods">
+                        <button class="pay-method-btn active" onclick="setPayMethod('card',this)">
+                            <i class="fas fa-credit-card"></i> Card
+                        </button>
+                        <button class="pay-method-btn" onclick="setPayMethod('upi',this)">
+                            <i class="fas fa-mobile-alt"></i> UPI / GPay
+                        </button>
+                        <button class="pay-method-btn" onclick="setPayMethod('cash',this)">
+                            <i class="fas fa-money-bill-wave"></i> Cash
+                        </button>
+                    </div>
+                </div>
+                <div id="cardFields" class="card-fields">
+                    <div class="form-group card-number-wrap">
+                        <label>Card Number</label>
+                        <input class="form-input" id="cardNum" placeholder="1234 5678 9012 3456" type="text" maxlength="19" oninput="formatCard(this)">
+                        <div class="card-icons">
+                            <i class="fab fa-cc-visa"></i>
+                            <i class="fab fa-cc-mastercard"></i>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Expiry Date</label>
+                            <input class="form-input" id="cardExpiry" placeholder="MM / YY" type="text" maxlength="7" oninput="formatExpiry(this)">
+                        </div>
+                        <div class="form-group">
+                            <label>CVV</label>
+                            <input class="form-input" id="cardCvv" placeholder="&bull;&bull;&bull;" type="password" maxlength="4">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Name on Card</label>
+                        <input class="form-input" id="cardName" placeholder="John Doe" type="text">
+                    </div>
+                </div>
+                <div id="upiFields" class="upi-field" style="display:none;">
+                    <div class="form-group">
+                        <label>UPI ID / GPay Number</label>
+                        <input class="form-input" id="upiId" placeholder="yourname@upi or mobile number" type="text">
+                    </div>
+                    <p style="font-size:0.8rem;color:var(--brown-accent);margin-top:4px;"><i class="fas fa-info-circle"></i> You will receive a payment request on your UPI app</p>
+                </div>
+                <div id="cashInfo" style="display:none;">
+                    <div style="background:rgba(212,168,67,0.1);border:1px solid rgba(212,168,67,0.3);border-radius:12px;padding:14px 16px;display:flex;gap:10px;align-items:flex-start;">
+                        <i class="fas fa-info-circle" style="color:var(--gold);margin-top:2px;"></i>
+                        <p style="font-size:0.88rem;color:var(--text-mid);line-height:1.5;">Pay with cash on delivery. Please keep <strong id="cashAmount">$0.00</strong> ready. Our delivery partner will carry change.</p>
+                    </div>
+                </div>
+                <div class="modal-nav">
+                    <button class="modal-back-btn" onclick="goToStep1()"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button class="place-order-btn" onclick="placeOrder()" id="placeOrderBtn" style="flex:1;margin-top:0;">
+                        <i class="fas fa-lock"></i> Place Order Securely
+                    </button>
+                </div>
+                <p style="text-align:center;font-size:0.72rem;color:var(--brown-accent);opacity:0.7;margin-top:12px;">
+                    <i class="fas fa-shield-alt"></i> 256-bit SSL encrypted &middot; Your data is safe
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== CONFIRMATION MODAL ========== -->
+<div class="modal-overlay" id="confirmModalOverlay">
+    <div class="confirm-modal">
+        <div class="confirm-icon"><i class="fas fa-check"></i></div>
+        <h2>Order Placed! &#x1F389;</h2>
+        <p>Thank you for your order at Brew &amp; Bliss. We are preparing your items with love.</p>
+        <div class="order-id-badge" id="confirmOrderId">Order #BB-000000</div>
+        <div class="confirm-eta">
+            <i class="fas fa-clock"></i>
+            <span id="confirmEta">Estimated delivery: 25-35 minutes</span>
+        </div>
+        <p style="font-size:0.8rem;margin-bottom:20px;">A confirmation has been sent to your phone. Track your order in real-time via our app.</p>
+        <button class="confirm-close-btn" onclick="closeConfirm()">
+            <i class="fas fa-mug-hot" style="margin-right:8px"></i> Back to Menu
+        </button>
+        <button class="confirm-close-btn" onclick="closeConfirm(); openTrackModal();" style="margin-top:10px;background:linear-gradient(135deg,#27ae60,#2ecc71);">
+            <i class="fas fa-map-marker-alt" style="margin-right:8px"></i> Track My Order
+        </button>
+    </div>
+</div>
+
+<!-- ========== COMBO ITEM CUSTOMIZATION MODAL ========== -->
+<div class="modal-overlay" id="comboModalOverlay">
+    <div class="order-modal" style="max-width:480px;">
+        <div style="padding:26px 26px 0;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+                <h3 id="comboModalTitle" style="margin:0;font-family:'Playfair Display',serif;color:var(--brown-dark);font-size:1.4rem;"></h3>
+                <button onclick="closeComboModal()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-mid);flex-shrink:0;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <p id="comboModalDesc" style="color:var(--text-mid);font-size:0.88rem;margin-top:6px;line-height:1.5;"></p>
+        </div>
+        <div id="comboModalSlots" style="padding:18px 26px 4px;"></div>
+        <div style="padding:16px 26px 26px;">
+            <button id="comboConfirmBtn" class="place-order-btn" onclick="confirmComboAddToCart()" disabled style="opacity:0.5;">
+                <i class="fas fa-cart-plus"></i> Add to Cart
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ========== ORDER TRACKING MODAL ========== -->
+<div id="trackModalOverlay">
+    <div class="track-modal">
+        <div class="track-modal-header">
+            <div>
+                <h2><i class="fas fa-map-marker-alt" style="margin-right:8px;color:var(--gold)"></i>Track Your Order</h2>
+                <p>Enter your order ID to see live status updates</p>
+            </div>
+            <button class="track-modal-close" onclick="closeTrackModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="track-modal-body">
+
+            <!-- Recent orders chips -->
+            <div class="track-recent" id="trackRecentWrap" style="display:none;">
+                <div class="track-recent-title"><i class="fas fa-history" style="margin-right:5px"></i>Recent Orders</div>
+                <div id="trackRecentChips"></div>
+            </div>
+
+            <!-- Search bar -->
+            <div class="track-search-wrap">
+                <input class="track-input" id="trackInput" type="text" placeholder="e.g. BB-482951" oninput="this.value=this.value.toUpperCase()">
+                <button class="track-search-btn" onclick="trackOrder()"><i class="fas fa-search" style="margin-right:6px"></i>Track</button>
+            </div>
+
+            <!-- Empty / not found state -->
+            <div class="track-empty" id="trackEmpty">
+                <i class="fas fa-search"></i>
+                <p id="trackEmptyMsg">Enter your order ID above to get started.</p>
+            </div>
+
+            <!-- Order card -->
+            <div class="track-order-card" id="trackOrderCard">
+                <div class="track-order-meta">
+                    <div>
+                        <div class="track-order-id" id="trackOrderId"></div>
+                        <div style="font-size:0.78rem;color:var(--brown-accent);margin-top:3px;" id="trackOrderTime"></div>
+                    </div>
+                    <div class="track-status-pill" id="trackStatusPill">
+                        <div class="track-status-dot"></div>
+                        <span id="trackStatusText"></span>
+                    </div>
+                </div>
+                <div class="track-items-list" id="trackItemsList"></div>
+                <div class="track-order-footer">
+                    <span id="trackOrderType"></span>
+                    <span class="track-order-total" id="trackOrderTotal"></span>
+                </div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="track-timeline" id="trackTimeline">
+                <div class="track-timeline-title">Order Progress</div>
+                <div class="timeline-steps" id="timelineSteps"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ========== SCRIPTS ========== -->
+<script>
+    // ============================================================
+    //  BACKEND API CONFIG
+    // ============================================================
+    // Point this at wherever the backend (see /backend folder) is running.
+    // Local dev default assumes `npm start` in the backend folder on port 4000.
+    const API_BASE = window.BB_API_BASE || 'http://localhost:4000/api';
+
+    // Small fetch wrapper: returns { ok, data, error }, never throws.
+    async function apiRequest(path, options = {}) {
+        try {
+            const res = await fetch(API_BASE + path, {
+                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+                ...options,
+            });
+            const isJson = (res.headers.get('content-type') || '').includes('application/json');
+            const data = isJson ? await res.json() : null;
+            if (!res.ok) return { ok: false, status: res.status, error: (data && data.error) || 'Request failed', data };
+            return { ok: true, status: res.status, data };
+        } catch (err) {
+            // Network error / backend not running — caller decides how to fall back.
+            return { ok: false, status: 0, error: 'Could not reach the server. Is the backend running?', data: null };
+        }
+    }
+
+    // A random ID this browser keeps in localStorage, so re-rating an item
+    // updates your own vote instead of counting as a brand-new voter.
+    function getRaterToken() {
+        let token = localStorage.getItem('brewbliss_rater_token');
+        if (!token) {
+            token = 'r_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 12);
+            localStorage.setItem('brewbliss_rater_token', token);
+        }
+        return token;
+    }
+
+    // ── Mobile menu toggle ──
+    function toggleMenu() {
+        const nav = document.getElementById('navLinks');
+        nav.classList.toggle('open');
+    }
+
+    // Smooth active link highlighting on scroll
+    const sections = document.querySelectorAll('section[id], div[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 100;
+            if (scrollY >= sectionTop) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+    });
+
+    // Intersection Observer for testimonial card fade-in (one-time, not reversible — that's fine here)
+    const testimonialObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, i * 80);
+                testimonialObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.testimonial-card').forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        testimonialObserver.observe(card);
+    });
+
+    // ============================================================
+    //  ALTERNATING ROW SLIDE-IN/OUT ANIMATION
+    //  Groups menu/offer cards into their actual visual rows (by
+    //  shared offsetTop within their grid), then alternates the
+    //  entrance direction per row: row 1 (odd) from the left,
+    //  row 2 (even) from the right — reversible in both directions
+    //  via IntersectionObserver toggling a class on enter/exit.
+    // ============================================================
+    function initRowScrollAnimations() {
+        const grids = document.querySelectorAll('.menu-grid, .offers-grid');
+        let allRows = [];
+        let observer = null;
+
+        function computeRows() {
+            allRows = [];
+
+            grids.forEach(grid => {
+                const cards = [...grid.querySelectorAll(':scope > .menu-card, :scope > .offer-card')];
+                if (!cards.length) return;
+
+                // Cards that share a visual row share the same offsetTop —
+                // this adapts automatically to however many columns the
+                // current screen width actually renders (3 on desktop,
+                // 1 on mobile, etc.) without hardcoding a column count.
+                const rowsMap = new Map();
+                cards.forEach(card => {
+                    const top = Math.round(card.offsetTop);
+                    if (!rowsMap.has(top)) rowsMap.set(top, []);
+                    rowsMap.get(top).push(card);
+                });
+
+                const sortedTops = [...rowsMap.keys()].sort((a, b) => a - b);
+                sortedTops.forEach((top, rowIndex) => {
+                    allRows.push({
+                        elements: rowsMap.get(top),
+                        direction: rowIndex % 2 === 0 ? 'left' : 'right', // row 1 = index 0 = from the left
+                    });
+                });
+            });
+
+            allRows.forEach(row => {
+                row.elements.forEach(el => {
+                    el.classList.add('scroll-row-item');
+                    el.classList.remove('from-left', 'from-right', 'row-visible');
+                    el.classList.add(row.direction === 'left' ? 'from-left' : 'from-right');
+                });
+            });
+
+            attachObserver();
+        }
+
+        function attachObserver() {
+            if (observer) observer.disconnect();
+
+            observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    // Toggling (not just adding) makes this fully reversible:
+                    // scrolling a row out of view removes 'row-visible', which
+                    // reverts it to its .from-left/.from-right resting state —
+                    // sliding back out the same way it came in.
+                    entry.target.classList.toggle('row-visible', entry.isIntersecting);
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: '0px 0px -10% 0px',
+            });
+
+            allRows.forEach(row => {
+                row.elements.forEach(el => observer.observe(el));
+            });
+        }
+
+        computeRows();
+
+        // Column count changes across breakpoints (e.g. 3 cards/row on
+        // desktop -> 1 on mobile), which changes which cards share a row —
+        // recompute after resize settles.
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(computeRows, 250);
+        });
+    }
+
+    initRowScrollAnimations();
+    // ============================================================
+//  REAL-TIME COMMENTS — backed by /api/comments, with a localStorage
+//  fallback so the section still works if the backend is offline.
+// ============================================================
+
+const STORAGE_KEY = 'brewbliss_comments';
+let usingLocalCommentsFallback = false;
+
+/* ── Helpers ── */
+function getComments() {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+}
+
+function saveComments(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+// Normalize a backend comment row to the shape the renderer expects.
+function normalizeServerComment(c) {
+    return {
+        id: String(c.id),
+        name: c.author_name,
+        text: c.body,
+        timestamp: new Date(c.created_at.replace(' ', 'T') + 'Z').getTime(),
+        likes: c.likes,
+        liked: false, // no accounts, so "liked" state isn't tracked server-side
+    };
+}
+
+function timeAgo(timestamp) {
+    const diff = Math.floor((Date.now() - timestamp) / 1000);
+    if (diff < 60)     return 'just now';
+    if (diff < 3600)   return Math.floor(diff / 60)   + ' min ago';
+    if (diff < 86400)  return Math.floor(diff / 3600)  + ' hr ago';
+    if (diff < 604800) return Math.floor(diff / 86400) + ' day' + (Math.floor(diff/86400)>1?'s':'') + ' ago';
+    return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function getInitials(name) {
+    return name.trim().split(' ')
+        .map(w => w[0].toUpperCase())
+        .slice(0, 2)
+        .join('');
+}
+
+/* ── Render All Comments ── */
+async function renderComments() {
+    const container  = document.getElementById('commentsContainer');
+    const emptyState = document.getElementById('emptyComments');
+
+    let comments;
+    const result = await apiRequest('/comments');
+    if (result.ok) {
+        usingLocalCommentsFallback = false;
+        comments = result.data.map(normalizeServerComment);
+    } else {
+        // Backend unreachable — fall back to whatever's cached locally so the
+        // page still works, but flag it so submit/like/delete know to use localStorage too.
+        usingLocalCommentsFallback = true;
+        comments = getComments();
+    }
+
+    container.innerHTML = '';
+
+    if (comments.length === 0) {
+        emptyState.style.display = 'block';
+        return;
+    }
+
+    emptyState.style.display = 'none';
+
+    // API already returns newest-first; local fallback array is oldest-first, so only reverse that one.
+    const ordered = usingLocalCommentsFallback ? [...comments].reverse() : comments;
+    ordered.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'comment-card';
+        card.dataset.id = c.id;
+
+        card.innerHTML = `
+            <div class="comment-user-avatar">${getInitials(c.name)}</div>
+            <div class="comment-content">
+                <div class="comment-header">
+                    <span class="comment-author">${escapeHTML(c.name)}</span>
+                    <span class="comment-time">${timeAgo(c.timestamp)}</span>
+                </div>
+                <p class="comment-body">${escapeHTML(c.text)}</p>
+                <div class="comment-actions">
+                    <button class="like-btn ${c.liked ? 'liked' : ''}"
+                            onclick="toggleLike('${c.id}')">
+                        <i class="${c.liked ? 'fas' : 'far'} fa-heart"></i>
+                        <span>${c.likes}</span>
+                    </button>
+                    <button class="delete-btn" onclick="deleteComment('${c.id}')">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+/* ── Submit a New Comment ── */
+async function submitComment() {
+    const nameEl = document.getElementById('commentName');
+    const textEl = document.getElementById('commentText');
+    const name   = nameEl.value.trim();
+    const text   = textEl.value.trim();
+
+    if (!name) {
+        shakeInput(nameEl);
+        showToast('✏️ Please enter your name!');
+        return;
+    }
+    if (!text) {
+        shakeInput(textEl);
+        showToast('💬 Please write something!');
+        return;
+    }
+
+    const result = await apiRequest('/comments', {
+        method: 'POST',
+        body: JSON.stringify({ authorName: name, body: text }),
+    });
+
+    if (!result.ok) {
+        // Backend unreachable (or rejected it) — save locally so nothing is lost.
+        const comments = getComments();
+        comments.push({ id: Date.now().toString(), name, text, timestamp: Date.now(), likes: 0, liked: false });
+        saveComments(comments);
+        showToast(result.status === 0 ? '⚠️ Saved locally — server unavailable' : `⚠️ ${result.error}`);
+    } else {
+        showToast('✅ Comment posted!');
+    }
+
+    nameEl.value = '';
+    textEl.value = '';
+    document.getElementById('charCount').textContent = '0 / 400';
+
+    await renderComments();
+
+    // Scroll to comments smoothly
+    setTimeout(() => {
+        document.getElementById('commentsContainer')
+            .firstElementChild
+            ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+}
+
+/* ── Like Toggle ── */
+async function toggleLike(id) {
+    if (usingLocalCommentsFallback) {
+        const comments = getComments();
+        const c = comments.find(x => x.id === id);
+        if (!c) return;
+        c.liked = !c.liked;
+        c.likes += c.liked ? 1 : -1;
+        saveComments(comments);
+    } else {
+        // The API models likes as a simple counter (no accounts to track per-user "liked" state).
+        await apiRequest(`/comments/${id}/like`, { method: 'POST' });
+    }
+    await renderComments();
+}
+
+/* ── Delete Comment ── */
+async function deleteComment(id) {
+    if (!confirm('Remove this comment?')) return;
+
+    if (usingLocalCommentsFallback) {
+        saveComments(getComments().filter(c => c.id !== id));
+    } else {
+        await apiRequest(`/comments/${id}`, { method: 'DELETE' });
+    }
+
+    // Animate out
+    const card = document.querySelector(`.comment-card[data-id="${id}"]`);
+    if (card) {
+        card.style.transition = 'all 0.35s ease';
+        card.style.opacity    = '0';
+        card.style.transform  = 'translateX(30px)';
+        setTimeout(() => renderComments(), 360);
+    } else {
+        renderComments();
+    }
+    showToast('🗑️ Comment deleted');
+}
+
+/* ── Toast Notification ── */
+function showToast(msg) {
+    const old = document.querySelector('.toast');
+    if (old) old.remove();
+
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+
+    setTimeout(() => {
+        t.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        t.style.opacity    = '0';
+        t.style.transform  = 'translateY(10px)';
+        setTimeout(() => t.remove(), 400);
+    }, 2500);
+}
+
+/* ── Shake animation on empty fields ── */
+function shakeInput(el) {
+    el.style.animation = 'none';
+    el.style.borderColor = '#c0392b';
+    el.style.boxShadow  = '0 0 0 3px rgba(192,57,43,0.15)';
+
+    let pos = 0;
+    const shake = setInterval(() => {
+        el.style.transform = `translateX(${pos % 2 === 0 ? -6 : 6}px)`;
+        pos++;
+        if (pos > 5) {
+            clearInterval(shake);
+            el.style.transform  = '';
+            el.style.borderColor = '';
+            el.style.boxShadow  = '';
+        }
+    }, 60);
+}
+
+/* ── Escape HTML to prevent XSS ── */
+function escapeHTML(str) {
+    return str.replace(/&/g,'&amp;')
+              .replace(/</g,'&lt;')
+              .replace(/>/g,'&gt;')
+              .replace(/"/g,'&quot;')
+              .replace(/'/g,'&#039;');
+}
+
+/* ── Char Counter ── */
+document.getElementById('commentText')?.addEventListener('input', function () {
+    document.getElementById('charCount').textContent = `${this.value.length} / 400`;
+});
+
+/* ── Submit on Ctrl+Enter ── */
+document.getElementById('commentText')?.addEventListener('keydown', function (e) {
+    if (e.ctrlKey && e.key === 'Enter') submitComment();
+});
+
+/* ── Auto-refresh timestamps every 60s ── */
+setInterval(renderComments, 60000);
+
+/* ── Initial Render ── */
+renderComments();
+
+// ============================================================
+//  CART SYSTEM  (fixed)
+// ============================================================
+
+// IDs are always stored and compared as STRINGS to survive JSON round-trips
+let cart = JSON.parse(localStorage.getItem('bb_cart') || '[]');
+// Normalise any legacy numeric IDs that might be in localStorage
+cart = cart.map(i => ({ ...i, id: String(i.id) }));
+
+let deliveryMode = 'delivery';
+let payMethod = 'card';
+
+function saveCart() {
+    localStorage.setItem('bb_cart', JSON.stringify(cart));
+}
+
+// ── Helpers ──
+function getItemName(btn) {
+    const card = btn.closest('.menu-card') || btn.closest('.offer-card');
+    if (card) { const h3 = card.querySelector('h3'); if (h3) return h3.textContent.trim(); }
+    return 'Item';
+}
+function getItemImg(btn) {
+    const card = btn.closest('.menu-card') || btn.closest('.offer-card');
+    if (card) { const img = card.querySelector('img'); if (img) return img.src; }
+    return '';
+}
+
+// ── Add to Cart ──
+// ============================================================
+//  COMBO ITEM CUSTOMIZATION (e.g. "Sweet Twins Deal", "Snack & Sip Bundle")
+//  Lets the customer pick specific menu items for each slot the combo
+//  requires, using only items that are actually on the live menu and
+//  match that slot's rules (category + optional name filter).
+// ============================================================
+let comboModalState = null; // { item, slots: [...], selections: [] }
+
+function getComboSlotOptions(slot) {
+    return liveMenuItems.filter(m => {
+        if (m.category !== slot.category) return false;
+        if (slot.nameContains && slot.nameContains.length > 0) {
+            const nameLower = m.name.toLowerCase();
+            return slot.nameContains.some(kw => nameLower.includes(kw.toLowerCase()));
+        }
+        return true;
+    });
+}
+
+function openComboModal(item) {
+    const slots = item.combo_config.slots;
+    comboModalState = {
+        item,
+        slots,
+        selections: new Array(slots.length).fill(null),
+    };
+
+    document.getElementById('comboModalTitle').textContent = item.name;
+    document.getElementById('comboModalDesc').textContent =
+        item.description || 'Choose your items for this combo:';
+
+    renderComboSlots();
+
+    document.getElementById('comboModalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeComboModal() {
+    document.getElementById('comboModalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    comboModalState = null;
+}
+
+function renderComboSlots() {
+    const container = document.getElementById('comboModalSlots');
+    const { slots, selections } = comboModalState;
+
+    container.innerHTML = slots.map((slot, i) => {
+        const options = getComboSlotOptions(slot);
+        const optionsHtml = options.length
+            ? options.map(opt => `
+                <button type="button"
+                        class="combo-option-btn ${selections[i] === opt.name ? 'selected' : ''}"
+                        onclick="selectComboOption(${i}, '${opt.name.replace(/'/g, "\\'")}')">
+                    ${opt.name}
+                </button>`).join('')
+            : `<span class="combo-slot-empty">No available options right now — please check back later.</span>`;
+
+        return `
+            <div class="combo-slot-block">
+                <div class="combo-slot-label ${selections[i] ? 'slot-filled' : ''}">
+                    <i class="fas fa-check-circle slot-check"></i> ${slot.label}
+                </div>
+                <div class="combo-slot-options">${optionsHtml}</div>
+            </div>`;
+    }).join('');
+
+    updateComboConfirmState();
+}
+
+function selectComboOption(slotIndex, optionName) {
+    comboModalState.selections[slotIndex] = optionName;
+    renderComboSlots();
+}
+
+function updateComboConfirmState() {
+    const btn = document.getElementById('comboConfirmBtn');
+    const allChosen = comboModalState.selections.every(s => s !== null);
+    btn.disabled = !allChosen;
+    btn.style.opacity = allChosen ? '1' : '0.5';
+}
+
+function confirmComboAddToCart() {
+    const { item, selections } = comboModalState;
+    if (selections.some(s => s === null)) return; // shouldn't happen, button is disabled until all chosen
+
+    // Combo items with different selections are different cart lines —
+    // only merge quantity if an identical combo (same picks) already exists.
+    const selectionsKey = JSON.stringify(selections);
+    const existing = cart.find(i => i.name === item.name && JSON.stringify(i.selections || []) === selectionsKey);
+
+    if (existing) {
+        existing.qty += 1;
+    } else {
+        cart.push({
+            name: item.name,
+            price: item.price,
+            img: item.image_url || '',
+            qty: 1,
+            id: String(Date.now()) + '_' + Math.random().toString(36).slice(2, 6),
+            selections: [...selections],
+        });
+    }
+
+    saveCart();
+    updateCartUI();
+    closeComboModal();
+    showToast(`🛒 ${item.name} added to cart!`);
+}
+
+function addToCart(btn) {
+    const price = parseFloat((btn.dataset.price || '$0').replace('$', ''));
+    const name  = getItemName(btn);
+    const img   = getItemImg(btn);
+
+    const existing = cart.find(i => i.name === name && !i.selections);
+    if (existing) {
+        existing.qty += 1;
+    } else {
+        // Always store id as a string
+        cart.push({ name, price, img, qty: 1, id: String(Date.now()) });
+    }
+    saveCart();
+    updateCartUI();
+
+    // Visual feedback – restore original HTML safely
+    btn.classList.add('added');
+    const origHTML = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check" style="position:relative;z-index:1"></i><span style="position:relative;z-index:1"> Added!</span>';
+    setTimeout(() => { btn.classList.remove('added'); btn.innerHTML = origHTML; }, 1400);
+
+    showToast('🛒 Added to cart!');
+}
+
+// ── Update all cart UI elements ──
+function updateCartUI() {
+    // Badge counts
+    const totalQty = cart.reduce((s, i) => s + i.qty, 0);
+    const badge = document.getElementById('cartBadge');
+    badge.textContent = totalQty;
+    badge.style.display = totalQty > 0 ? 'flex' : 'none';
+    const navCount = document.getElementById('navCartCount');
+    if (navCount) { navCount.textContent = totalQty; navCount.style.display = totalQty > 0 ? 'inline' : 'none'; }
+
+    const footer = document.getElementById('cartFooter');
+    const list   = document.getElementById('cartItemsList');
+
+    if (cart.length === 0) {
+        // Re-render empty state directly into list – don't move DOM nodes
+        list.innerHTML = `
+            <div class="cart-empty-state">
+                <i class="fas fa-mug-hot"></i>
+                <p>Your cart is empty</p>
+                <span style="font-size:0.82rem">Add items from our menu to get started</span>
+            </div>`;
+        footer.style.display = 'none';
+        return;
+    }
+
+    footer.style.display = 'block';
+
+    // Build items HTML – pass id as a quoted string in onclick
+    let html = '';
+    cart.forEach(item => {
+        const safeId  = item.id;   // already a string
+        const imgTag  = item.img
+            ? `<img src="${item.img}" class="cart-item-img" alt="${item.name}">`
+            : `<div class="cart-item-img" style="background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:1.4rem;">☕</div>`;
+        const selectionsTag = (item.selections && item.selections.length)
+            ? `<div style="font-size:0.78rem;color:var(--brown-accent);margin-top:2px;">${item.selections.join(' + ')}</div>`
+            : '';
+        html += `
+        <div class="cart-item" data-id="${safeId}">
+            ${imgTag}
+            <div class="cart-item-info">
+                <h4>${item.name}</h4>
+                ${selectionsTag}
+                <div class="cart-item-price">$${(item.price * item.qty).toFixed(2)} <span style="font-weight:400;font-size:0.78rem;opacity:0.6">($${item.price.toFixed(2)} each)</span></div>
+                <div class="cart-qty-controls">
+                    <button class="qty-btn" onclick="changeQty('${safeId}', -1)" title="Decrease"><i class="fas fa-minus"></i></button>
+                    <span class="qty-num">${item.qty}</span>
+                    <button class="qty-btn" onclick="changeQty('${safeId}', 1)" title="Increase"><i class="fas fa-plus"></i></button>
+                    <button class="cart-item-remove" onclick="removeFromCart('${safeId}')" title="Remove"><i class="fas fa-trash-alt"></i> Remove</button>
+                </div>
+            </div>
+        </div>`;
+    });
+    list.innerHTML = html;
+
+    // Totals
+    const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const delivery = deliveryMode === 'delivery' ? 2.50 : 0;
+    const tax      = subtotal * 0.08;
+    const total    = subtotal + delivery + tax;
+
+    document.getElementById('cartSubtotal').textContent = '$' + subtotal.toFixed(2);
+    document.getElementById('cartDelivery').textContent = delivery === 0 ? 'Free' : '$' + delivery.toFixed(2);
+    document.getElementById('cartTax').textContent      = '$' + tax.toFixed(2);
+    document.getElementById('cartTotal').textContent    = '$' + total.toFixed(2);
+}
+
+// ── Change quantity – id is always a string ──
+function changeQty(id, delta) {
+    id = String(id);
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+    saveCart();
+    updateCartUI();
+}
+
+// ── Remove item – id is always a string ──
+function removeFromCart(id) {
+    id = String(id);
+    cart = cart.filter(i => i.id !== id);
+    saveCart();
+    updateCartUI();
+}
+
+// ── Cart drawer open / close ──
+function openCart() {
+    document.getElementById('cartOverlay').classList.add('open');
+    document.getElementById('cartDrawer').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCart() {
+    document.getElementById('cartOverlay').classList.remove('open');
+    document.getElementById('cartDrawer').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+// ── Delivery type ──
+function setDelivery(mode, btn) {
+    deliveryMode = mode;
+    document.querySelectorAll('.delivery-type-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const addrGroup = document.getElementById('addressGroup');
+    const cityGroup = document.getElementById('cityStateGroup');
+    if (mode === 'pickup') {
+        addrGroup.style.display = 'none';
+        cityGroup.style.display = 'none';
+    } else {
+        addrGroup.style.display = '';
+        cityGroup.style.display = '';
+    }
+    updateCartUI();
+}
+
+// ── Order modal ──
+function openOrderModal() {
+    if (cart.length === 0) { showToast('🛒 Your cart is empty!'); return; }
+    closeCart();
+    document.getElementById('orderModalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    goToStep1(true);
+}
+
+function closeOrderModal() {
+    document.getElementById('orderModalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+function goToStep1(silent) {
+    document.getElementById('modalStep1').classList.add('active');
+    document.getElementById('modalStep2').classList.remove('active');
+    document.getElementById('step1dot').className = 'step-dot active';
+    document.getElementById('step2dot').className = 'step-dot';
+    document.getElementById('modalTitle').textContent = 'Delivery Details';
+}
+
+function goToPayment() {
+    // Validate step 1
+    const fname = document.getElementById('fname').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const address = document.getElementById('address').value.trim();
+    if (!fname) { shakeInput(document.getElementById('fname')); showToast('Please enter your name!'); return; }
+    if (!phone) { shakeInput(document.getElementById('phone')); showToast('Please enter your phone!'); return; }
+    if (deliveryMode === 'delivery' && !address) { shakeInput(document.getElementById('address')); showToast('Please enter your address!'); return; }
+
+    // Populate payment summary
+    let summaryHTML = '';
+    cart.forEach(item => {
+        summaryHTML += `<div class="summary-item"><span>${item.name} x${item.qty}</span><span>$${(item.price * item.qty).toFixed(2)}</span></div>`;
+    });
+    document.getElementById('paymentSummaryItems').innerHTML = summaryHTML;
+
+    const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const delivery = deliveryMode === 'delivery' ? 2.50 : 0;
+    const tax = subtotal * 0.08;
+    const total = subtotal + delivery + tax;
+    document.getElementById('paymentTotal').textContent = '$' + total.toFixed(2);
+    document.getElementById('cashAmount').textContent = '$' + total.toFixed(2);
+
+    document.getElementById('modalStep1').classList.remove('active');
+    document.getElementById('modalStep2').classList.add('active');
+    document.getElementById('step1dot').className = 'step-dot done';
+    document.getElementById('step1dot').innerHTML = '<i class="fas fa-check" style="font-size:0.7rem"></i>';
+    document.getElementById('step2dot').className = 'step-dot active';
+    document.getElementById('modalTitle').textContent = 'Secure Payment';
+}
+
+// ── Payment method ──
+function setPayMethod(method, btn) {
+    payMethod = method;
+    document.querySelectorAll('.pay-method-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('cardFields').style.display = method === 'card' ? '' : 'none';
+    document.getElementById('upiFields').style.display = method === 'upi' ? '' : 'none';
+    document.getElementById('cashInfo').style.display = method === 'cash' ? '' : 'none';
+}
+
+// ── Card input formatters ──
+function formatCard(el) {
+    let v = el.value.replace(/\D/g, '').substring(0, 16);
+    el.value = v.replace(/(.{4})/g, '$1 ').trim();
+}
+function formatExpiry(el) {
+    let v = el.value.replace(/\D/g, '').substring(0, 4);
+    if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2);
+    el.value = v;
+}
+
+// ── Place Order — see the live implementation near the bottom of this
+// script (it POSTs to the backend). This stub is intentionally removed
+// to avoid the duplicate-definition confusion that was here before.
+
+function closeConfirm() {
+    document.getElementById('confirmModalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    // Reset modal steps
+    document.getElementById('step1dot').className = 'step-dot active';
+    document.getElementById('step1dot').innerHTML = '1';
+}
+
+// Close modals on overlay click
+document.getElementById('orderModalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeOrderModal();
+});
+document.getElementById('confirmModalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeConfirm();
+});
+document.getElementById('trackModalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeTrackModal();
+});
+document.getElementById('comboModalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeComboModal();
+});
+
+// ============================================================
+//  ORDER TRACKING
+// ============================================================
+
+// Status definitions per delivery type
+const DELIVERY_TIMELINE = [
+    { key: 'placed',    label: 'Order Placed',       sub: 'We received your order',          icon: 'fa-receipt' },
+    { key: 'confirmed', label: 'Order Confirmed',     sub: 'Kitchen is preparing your items', icon: 'fa-check-circle' },
+    { key: 'preparing', label: 'Being Prepared',      sub: 'Our baristas are at work',         icon: 'fa-mug-hot' },
+    { key: 'on-the-way',label: 'Out for Delivery',    sub: 'Your order is on its way',         icon: 'fa-motorcycle' },
+    { key: 'delivered', label: 'Delivered',           sub: 'Enjoy your order!',                icon: 'fa-home' },
+];
+
+const PICKUP_TIMELINE = [
+    { key: 'placed',    label: 'Order Placed',       sub: 'We received your order',           icon: 'fa-receipt' },
+    { key: 'confirmed', label: 'Order Confirmed',    sub: 'Kitchen is preparing your items',  icon: 'fa-check-circle' },
+    { key: 'preparing', label: 'Being Prepared',     sub: 'Our baristas are at work',          icon: 'fa-mug-hot' },
+    { key: 'ready',     label: 'Ready for Pickup',   sub: 'Come grab your order!',             icon: 'fa-store' },
+];
+
+// A small local cache of order IDs the user has placed on this device, purely
+// so the "recent orders" chips in the tracking modal have something to show.
+// The actual order data always comes from the backend (see trackOrder()).
+const RECENT_ORDERS_KEY = 'brewbliss_recent_order_ids';
+
+function getRecentOrderIds() {
+    return JSON.parse(localStorage.getItem(RECENT_ORDERS_KEY) || '[]');
+}
+
+function rememberOrderId(orderId) {
+    const ids = getRecentOrderIds().filter(id => id !== orderId);
+    ids.unshift(orderId);
+    localStorage.setItem(RECENT_ORDERS_KEY, JSON.stringify(ids.slice(0, 5)));
+}
+
+function statusPillClass(status) {
+    const map = { placed:'preparing', confirmed:'preparing', preparing:'preparing',
+                  'on-the-way':'on-the-way', delivered:'delivered',
+                  ready:'ready', cancelled:'cancelled' };
+    return map[status] || 'preparing';
+}
+
+function statusLabel(status) {
+    const map = { placed:'Order Placed', confirmed:'Confirmed', preparing:'Preparing',
+                  'on-the-way':'On the Way', delivered:'Delivered',
+                  ready:'Ready for Pickup', cancelled:'Cancelled' };
+    return map[status] || status;
+}
+
+function openTrackModal() {
+    document.getElementById('trackModalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    renderRecentChips();
+    // Clear previous results
+    document.getElementById('trackOrderCard').classList.remove('visible');
+    document.getElementById('trackTimeline').classList.remove('visible');
+    document.getElementById('trackEmpty').classList.remove('visible');
+}
+
+function closeTrackModal() {
+    document.getElementById('trackModalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+function renderRecentChips() {
+    const ids = getRecentOrderIds();
+    const wrap = document.getElementById('trackRecentWrap');
+    const chips = document.getElementById('trackRecentChips');
+    if (!ids.length) { wrap.style.display = 'none'; return; }
+    wrap.style.display = 'block';
+    chips.innerHTML = ids.map(id => `
+        <button class="recent-order-chip" onclick="fillAndTrack('${id}')">
+            <i class="fas fa-receipt"></i> ${id}
+        </button>`).join('');
+}
+
+function fillAndTrack(id) {
+    document.getElementById('trackInput').value = id;
+    trackOrder();
+}
+
+async function trackOrder() {
+    const raw = document.getElementById('trackInput').value.trim().toUpperCase();
+    const orderCard   = document.getElementById('trackOrderCard');
+    const timeline    = document.getElementById('trackTimeline');
+    const emptyState  = document.getElementById('trackEmpty');
+
+    // Hide previous results
+    orderCard.classList.remove('visible');
+    timeline.classList.remove('visible');
+    emptyState.classList.remove('visible');
+
+    if (!raw) {
+        document.getElementById('trackEmptyMsg').textContent = 'Please enter an order ID to track.';
+        emptyState.classList.add('visible');
+        return;
+    }
+
+    const result = await apiRequest(`/orders/${encodeURIComponent(raw)}`);
+
+    if (!result.ok) {
+        document.getElementById('trackEmptyMsg').textContent =
+            result.status === 404
+                ? `No order found for "${raw}". Please check the ID and try again.`
+                : `Couldn't reach the server to look up "${raw}". Please try again shortly.`;
+        emptyState.classList.add('visible');
+        return;
+    }
+
+    const order = result.data;
+    rememberOrderId(order.id);
+
+    const status = order.status;
+    const steps  = order.delivery_mode === 'pickup' ? PICKUP_TIMELINE : DELIVERY_TIMELINE;
+    const activeIdx = steps.findIndex(s => s.key === status);
+
+    // Populate order card
+    document.getElementById('trackOrderId').textContent = 'Order #' + order.id;
+    const placedAtMs = new Date(order.placed_at.replace(' ', 'T') + 'Z').getTime();
+    const elapsed = Math.floor((Date.now() - placedAtMs) / 60000);
+    document.getElementById('trackOrderTime').textContent =
+        elapsed < 1 ? 'Placed just now' :
+        elapsed < 60 ? `Placed ${elapsed} min ago` :
+        `Placed ${Math.floor(elapsed/60)}h ${elapsed%60}m ago`;
+
+    const pill = document.getElementById('trackStatusPill');
+    pill.className = 'track-status-pill ' + statusPillClass(status);
+    document.getElementById('trackStatusText').textContent = statusLabel(status);
+
+    document.getElementById('trackItemsList').innerHTML =
+        order.items.map(i => {
+            const sel = (i.selections && i.selections.length) ? ` (${i.selections.join(' + ')})` : '';
+            return `<span>• ${i.name}${sel} × ${i.qty} — $${(i.price*i.qty).toFixed(2)}</span>`;
+        }).join('');
+
+    document.getElementById('trackOrderType').textContent =
+        order.delivery_mode === 'pickup' ? '🏪 Store Pickup' : '🛵 Home Delivery';
+    document.getElementById('trackOrderTotal').textContent = 'Total: $' + order.total.toFixed(2);
+
+    orderCard.classList.add('visible');
+
+    // Build timeline (activeIdx === -1 for a cancelled order — nothing shown as "active")
+    const stepsEl = document.getElementById('timelineSteps');
+    stepsEl.innerHTML = steps.map((s, i) => {
+        const cls = activeIdx === -1 ? '' : i < activeIdx ? 'done' : i === activeIdx ? 'active' : '';
+        const iconCls = i < activeIdx ? 'fa-check' : s.icon;
+        return `<div class="timeline-step ${cls}">
+            <div class="timeline-step-icon"><i class="fas ${iconCls}"></i></div>
+            <div class="timeline-step-label">${s.label}</div>
+            <div class="timeline-step-sub">${s.sub}</div>
+        </div>`;
+    }).join('');
+
+    timeline.classList.add('visible');
+}
+
+// ── Place Order — POSTs the cart to the backend, which re-prices everything,
+// runs the (mock) payment, and returns a real order ID to track. ──
+async function placeOrder() {
+    let cardNumber, upiId, customerName;
+
+    if (payMethod === 'card') {
+        const num = document.getElementById('cardNum').value.replace(/\s/g,'');
+        const expiry = document.getElementById('cardExpiry').value;
+        const cvv = document.getElementById('cardCvv').value;
+        const name = document.getElementById('cardName').value.trim();
+        if (num.length < 16) { showToast('Please enter a valid card number'); return; }
+        if (expiry.length < 7) { showToast('Please enter expiry date'); return; }
+        if (cvv.length < 3) { showToast('Please enter CVV'); return; }
+        if (!name) { showToast('Please enter the name on card'); return; }
+        cardNumber = num;
+        customerName = name;
+    } else if (payMethod === 'upi') {
+        const upi = document.getElementById('upiId').value.trim();
+        if (!upi) { showToast('Please enter your UPI ID'); return; }
+        upiId = upi;
+    }
+
+    const address = deliveryMode === 'delivery' ? document.getElementById('address').value.trim() : undefined;
+    if (deliveryMode === 'delivery' && !address) {
+        shakeInput(document.getElementById('address'));
+        showToast('Please enter your address!');
+        return;
+    }
+
+    const btn = document.getElementById('placeOrderBtn');
+    btn.innerHTML = '<div class="spinner"></div> Processing...';
+    btn.disabled = true;
+
+    const cartSnapshot = [...cart];
+    const modeSnapshot = deliveryMode;
+
+    const result = await apiRequest('/orders', {
+        method: 'POST',
+        body: JSON.stringify({
+            items: cartSnapshot.map(i => ({ name: i.name, qty: i.qty, comboSelections: i.selections || undefined })),
+            deliveryMode: modeSnapshot,
+            deliveryAddress: address,
+            customerName,
+            paymentMethod: payMethod === 'cash' ? 'cod' : payMethod,
+            cardNumber,
+            upiId,
+        }),
+    });
+
+    btn.innerHTML = '<i class="fas fa-lock"></i> Place Order Securely';
+    btn.disabled = false;
+
+    if (!result.ok) {
+        showToast(result.status === 402 ? `❌ ${result.error}` : `⚠️ ${result.error}`);
+        return;
+    }
+
+    const order = result.data;
+    closeOrderModal();
+    rememberOrderId(order.id);
+
+    document.getElementById('confirmOrderId').textContent = 'Order #' + order.id;
+    const eta = modeSnapshot === 'delivery' ? '25-35 minutes' : '10-15 minutes (ready for pickup)';
+    document.getElementById('confirmEta').textContent = (modeSnapshot === 'delivery' ? 'Estimated delivery: ' : 'Ready in: ') + eta;
+    document.getElementById('confirmModalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    cart = [];
+    saveCart();
+    updateCartUI();
+}
+
+// ============================================================
+//  LIVE MENU SYNC — pulls current prices & availability from the
+//  backend and updates the (still-static-HTML) menu cards on load.
+//  Matches cards to backend items by their <h3> name.
+//  If the backend is unreachable, the page just keeps showing
+//  whatever prices are hardcoded in the HTML — no error shown to
+//  the customer for this, since it's a non-critical enhancement.
+// ============================================================
+// Cached copy of the live menu, refreshed on each page load — used to
+// populate combo item slot pickers with only real, currently-available choices.
+let liveMenuItems = [];
+
+async function syncMenuFromBackend() {
+    const result = await apiRequest('/menu');
+    if (!result.ok) return;
+
+    const items = result.data;
+    liveMenuItems = items;
+    const byName = new Map(items.map(i => [i.name.trim().toLowerCase(), i]));
+
+    document.querySelectorAll('.menu-card, .offer-card').forEach(card => {
+        const h3 = card.querySelector('h3');
+        if (!h3) return;
+
+        const key = h3.textContent.trim().toLowerCase();
+        const match = byName.get(key);
+        const btn = card.querySelector('.add-to-cart-btn, .offer-add-btn');
+
+        if (!match) {
+            // Item exists on the page but the backend doesn't list it as
+            // available (admin disabled it, or it was deleted) — sell it as sold out.
+            if (btn) {
+                btn.disabled = true;
+                btn.onclick = null;
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'not-allowed';
+                const label = btn.querySelector('span');
+                if (label) label.textContent = 'Sold Out';
+            }
+            card.style.opacity = '0.6';
+            return;
+        }
+
+        const priceStr = '$' + match.price.toFixed(2);
+        if (btn) btn.dataset.price = priceStr;
+
+        if (card.classList.contains('offer-card')) {
+            const newPriceEl = card.querySelector('.offer-new-price');
+            if (newPriceEl) newPriceEl.textContent = priceStr;
+
+            const oldPriceEl = card.querySelector('.offer-old-price');
+            const badgeEl = card.querySelector('.offer-badge');
+
+            if (match.original_price && match.original_price > match.price) {
+                // Recompute the discount from real numbers — never trust a hardcoded "X% OFF" string.
+                if (oldPriceEl) oldPriceEl.textContent = '$' + match.original_price.toFixed(2);
+                const pct = Math.round((1 - match.price / match.original_price) * 100);
+                if (badgeEl) badgeEl.textContent = pct + '% OFF';
+            } else if (badgeEl) {
+                // No original_price set for this offer — can't honestly show a % off, so don't guess.
+                badgeEl.style.display = 'none';
+                if (oldPriceEl) oldPriceEl.style.display = 'none';
+            }
+        } else {
+            const priceSpan = btn ? btn.querySelector('span') : null;
+            if (priceSpan) priceSpan.textContent = priceStr;
+        }
+
+        // Combo items (e.g. "Sweet Twins Deal") need the customer to pick
+        // specific menu items before they can be added to cart — swap the
+        // button's normal behavior for the picker modal.
+        if (btn && match.combo_config && match.combo_config.slots && match.combo_config.slots.length > 0) {
+            btn.onclick = () => openComboModal(match);
+        }
+
+        renderRatingWidget(card, match);
+    });
+}
+
+// ============================================================
+//  LIVE STAR RATINGS — clickable stars that post to the backend
+//  and update the average immediately, no page reload needed.
+// ============================================================
+function renderRatingWidget(card, item) {
+    const ratingDiv = card.querySelector('.rating');
+    if (!ratingDiv) return; // offer cards don't have a rating widget
+
+    const myVoteKey = 'brewbliss_my_rating_' + item.id;
+    const myVote = parseInt(localStorage.getItem(myVoteKey) || '0', 10);
+
+    ratingDiv.dataset.itemId = item.id;
+    ratingDiv.innerHTML = '';
+
+    for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('i');
+        star.className = 'fas fa-star rating-star';
+        star.dataset.value = i;
+        if (i <= Math.round(item.avg_rating)) {
+            star.style.color = 'var(--gold)';
+        } else {
+            star.style.opacity = '0.35';
+        }
+        star.title = myVote ? `You rated ${myVote}★ — click to change` : `Rate ${i} star${i > 1 ? 's' : ''}`;
+
+        star.addEventListener('mouseenter', () => previewStars(ratingDiv, i));
+        star.addEventListener('mouseleave', () => resetStarPreview(ratingDiv, item));
+        star.addEventListener('click', () => submitRating(item.id, i, card));
+
+        ratingDiv.appendChild(star);
+    }
+
+    const countSpan = document.createElement('span');
+    countSpan.className = 'rating-count';
+    countSpan.textContent = item.rating_count > 0
+        ? `(${item.avg_rating.toFixed(1)}) · ${item.rating_count}`
+        : '(New)';
+    ratingDiv.appendChild(countSpan);
+}
+
+function previewStars(ratingDiv, hoverValue) {
+    ratingDiv.querySelectorAll('.rating-star').forEach(star => {
+        star.style.opacity = Number(star.dataset.value) <= hoverValue ? '1' : '0.35';
+        star.style.color = 'var(--gold)';
+    });
+}
+
+function resetStarPreview(ratingDiv, item) {
+    ratingDiv.querySelectorAll('.rating-star').forEach(star => {
+        const v = Number(star.dataset.value);
+        star.style.opacity = v <= Math.round(item.avg_rating) ? '1' : '0.35';
+    });
+}
+
+async function submitRating(itemId, value, card) {
+    const ratingDiv = card.querySelector('.rating');
+    if (!ratingDiv || ratingDiv.classList.contains('rating-submitting')) return;
+
+    ratingDiv.classList.add('rating-submitting');
+
+    const result = await apiRequest(`/menu/${itemId}/rate`, {
+        method: 'POST',
+        body: JSON.stringify({ rating: value, raterToken: getRaterToken() }),
+    });
+
+    ratingDiv.classList.remove('rating-submitting');
+
+    if (!result.ok) {
+        showToast(result.status === 0 ? '⚠️ Could not reach the server' : `⚠️ ${result.error}`);
+        return;
+    }
+
+    // Remember this browser's own vote so future page loads show it in the tooltip.
+    localStorage.setItem('brewbliss_my_rating_' + itemId, String(value));
+
+    // Re-render this one card's widget immediately with the real server numbers —
+    // this is the "updates the total average on its own" behavior.
+    renderRatingWidget(card, {
+        id: itemId,
+        avg_rating: result.data.avg_rating,
+        rating_count: result.data.rating_count,
+    });
+
+    showToast(`⭐ Thanks for rating ${value} star${value > 1 ? 's' : ''}!`);
+}
+
+// Init
+updateCartUI();
+syncMenuFromBackend();
+</script>
+
+</body>
+</html>

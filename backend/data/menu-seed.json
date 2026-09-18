@@ -1,0 +1,247 @@
+[
+  {
+    "name": "Morning Bliss Combo",
+    "price": 10.49,
+    "category": "offer",
+    "icon": "fas fa-tag",
+    "image_url": "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600&q=80",
+    "description": "Espresso + Croissant + Fresh OJ \u2014 the perfect way to kickstart your day.",
+    "original_price": 14.99,
+    "avg_rating": 0,
+    "rating_count": 0
+  },
+  {
+    "name": "Sweet Twins Deal",
+    "price": 6.0,
+    "category": "offer",
+    "icon": "fas fa-tag",
+    "image_url": "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600&q=80",
+    "description": "Any two desserts from our signature dessert board at the price of one.",
+    "original_price": 12.0,
+    "avg_rating": 0,
+    "rating_count": 0,
+    "combo_config": {
+      "slots": [
+        {
+          "label": "Choose your first dessert",
+          "category": "dessert"
+        },
+        {
+          "label": "Choose your second dessert",
+          "category": "dessert"
+        }
+      ]
+    }
+  },
+  {
+    "name": "Snack & Sip Bundle",
+    "price": 11.99,
+    "category": "offer",
+    "icon": "fas fa-tag",
+    "image_url": "https://images.unsplash.com/photo-1550507992-eb63ffee0847?w=600&q=80",
+    "description": "Any sandwich or burger with a cold brew or iced latte of your choice.",
+    "original_price": 16.0,
+    "avg_rating": 0,
+    "rating_count": 0,
+    "combo_config": {
+      "slots": [
+        {
+          "label": "Choose your sandwich or burger",
+          "category": "food",
+          "nameContains": [
+            "Burger",
+            "Sandwich"
+          ]
+        },
+        {
+          "label": "Choose your drink",
+          "category": "coffee",
+          "nameContains": [
+            "Latte",
+            "Cold Brew"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "Classic Espresso",
+    "price": 3.99,
+    "category": "coffee",
+    "icon": "fas fa-mug-hot",
+    "image_url": "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=600&q=80",
+    "description": null,
+    "avg_rating": 4.9,
+    "rating_count": 63
+  },
+  {
+    "name": "Velvety Cappuccino",
+    "price": 4.99,
+    "category": "coffee",
+    "icon": "fas fa-mug-hot",
+    "image_url": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80",
+    "description": null,
+    "avg_rating": 4.8,
+    "rating_count": 41
+  },
+  {
+    "name": "Caramel Latte",
+    "price": 5.49,
+    "category": "coffee",
+    "icon": "fas fa-mug-hot",
+    "image_url": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80",
+    "description": null,
+    "avg_rating": 4.7,
+    "rating_count": 105
+  },
+  {
+    "name": "Signature Cold Brew",
+    "price": 5.99,
+    "category": "coffee",
+    "icon": "fas fa-mug-hot",
+    "image_url": "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&q=80",
+    "description": null,
+    "avg_rating": 5.0,
+    "rating_count": 97
+  },
+  {
+    "name": "Dark Chocolate Mocha",
+    "price": 5.79,
+    "category": "coffee",
+    "icon": "fas fa-mug-hot",
+    "image_url": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&q=80",
+    "description": null,
+    "avg_rating": 4.9,
+    "rating_count": 92
+  },
+  {
+    "name": "Matcha Cloud Latte",
+    "price": 6.29,
+    "category": "coffee",
+    "icon": "fas fa-mug-hot",
+    "image_url": "https://images.unsplash.com/photo-1487090541024-55abef197084?w=600&q=80",
+    "description": null,
+    "avg_rating": 4.6,
+    "rating_count": 70
+  },
+  {
+    "name": "Belgian Chocolate Cake",
+    "price": 6.99,
+    "category": "dessert",
+    "icon": "fas fa-cookie-bite",
+    "image_url": "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&q=80",
+    "description": null,
+    "avg_rating": 4.9,
+    "rating_count": 61
+  },
+  {
+    "name": "NY Strawberry Cheesecake",
+    "price": 7.49,
+    "category": "dessert",
+    "icon": "fas fa-cookie-bite",
+    "image_url": "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&q=80",
+    "description": null,
+    "avg_rating": 4.7,
+    "rating_count": 174
+  },
+  {
+    "name": "Classic Tiramisu",
+    "price": 6.49,
+    "category": "dessert",
+    "icon": "fas fa-cookie-bite",
+    "image_url": "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&q=80",
+    "description": null,
+    "avg_rating": 5.0,
+    "rating_count": 57
+  },
+  {
+    "name": "Belgian Waffle Stack",
+    "price": 8.99,
+    "category": "dessert",
+    "icon": "fas fa-cookie-bite",
+    "image_url": "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80",
+    "description": null,
+    "avg_rating": 4.8,
+    "rating_count": 143
+  },
+  {
+    "name": "French Macaron Box",
+    "price": 9.99,
+    "category": "dessert",
+    "icon": "fas fa-cookie-bite",
+    "image_url": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&q=80",
+    "description": null,
+    "avg_rating": 4.6,
+    "rating_count": 43
+  },
+  {
+    "name": "Warm Cinnamon Roll",
+    "price": 4.99,
+    "category": "dessert",
+    "icon": "fas fa-cookie-bite",
+    "image_url": "https://images.unsplash.com/photo-1627308595229-7830a5c91f9f?w=600&q=80",
+    "description": null,
+    "avg_rating": 4.9,
+    "rating_count": 42
+  },
+  {
+    "name": "Caf\u00e9 Classic Burger",
+    "price": 10.99,
+    "category": "food",
+    "icon": "fas fa-burger",
+    "image_url": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80",
+    "description": null,
+    "avg_rating": 4.9,
+    "rating_count": 58
+  },
+  {
+    "name": "Smoky BBQ Burger",
+    "price": 12.49,
+    "category": "food",
+    "icon": "fas fa-burger",
+    "image_url": "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=600&q=80",
+    "description": null,
+    "avg_rating": 4.7,
+    "rating_count": 90
+  },
+  {
+    "name": "Club House Sandwich",
+    "price": 9.99,
+    "category": "food",
+    "icon": "fas fa-sandwich",
+    "image_url": "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&q=80",
+    "description": null,
+    "avg_rating": 4.8,
+    "rating_count": 94
+  },
+  {
+    "name": "Garden Fresh Sandwich",
+    "price": 8.49,
+    "category": "food",
+    "icon": "fas fa-sandwich",
+    "image_url": "https://images.unsplash.com/photo-1555072956-7758afb20e8f?w=600&q=80",
+    "description": null,
+    "avg_rating": 4.7,
+    "rating_count": 164
+  },
+  {
+    "name": "Italian Grilled Panini",
+    "price": 9.49,
+    "category": "food",
+    "icon": "fas fa-sandwich",
+    "image_url": "https://images.unsplash.com/photo-1603046891726-36bfd957e0bf?w=600&q=80",
+    "description": null,
+    "avg_rating": 4.6,
+    "rating_count": 41
+  },
+  {
+    "name": "Truffle Parmesan Fries",
+    "price": 5.99,
+    "category": "sides",
+    "icon": "fas fa-utensils",
+    "image_url": "https://images.unsplash.com/photo-1513185158878-8d8c2a2a3da3?w=600&q=80",
+    "description": null,
+    "avg_rating": 4.9,
+    "rating_count": 178
+  }
+]
