@@ -38,7 +38,7 @@ in a demo, or credentials can be shared on request.
 - **Scroll animations**: menu rows alternate sliding in from left/right as you
   scroll, fully reversible
 
-## Demo Video
+## Dash board Images 
 
 _Paste the video link from GitHub's asset upload here (drag a video file into a
 new Issue's comment box, submit it, then copy the generated line — it renders
