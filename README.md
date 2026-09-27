@@ -5,7 +5,7 @@ live order tracking, an admin dashboard for managing prices and inventory,
 customer star ratings, and configurable combo items — built with vanilla
 JavaScript on the frontend and a Node.js/Express/SQLite API on the backend.
 
-**Live demo:** _add your Netlify URL here_
+**Live demo:**( https://charming-wisp-43eff4.netlify.app/ )
 
 > Note: the live demo runs on free hosting tiers. The backend may take 30-60
 > seconds to "wake up" on the first request after a period of inactivity, and
