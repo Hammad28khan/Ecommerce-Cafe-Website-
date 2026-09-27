@@ -142,3 +142,4 @@ the database directly.
 - No customer accounts — checkout and rating are both guest/session-based
 - SQLite is fine for a project this size but would need to move to Postgres
   or similar for real production traffic
+- The layout is designed for desktop — it hasn't been adapted for small mobile screens yet, so it's best viewed on a laptop/desktop browser 
