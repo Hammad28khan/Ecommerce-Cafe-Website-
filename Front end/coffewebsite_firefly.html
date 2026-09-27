@@ -3488,7 +3488,7 @@
     // ============================================================
     // Point this at wherever the backend (see /backend folder) is running.
     // Local dev default assumes `npm start` in the backend folder on port 4000.
-    const API_BASE = window.BB_API_BASE || 'http://localhost:4000/api';
+    const API_BASE = window.BB_API_BASE || 'https://ecommerce-cafe-website-1.onrender.com/api';
 
     // Small fetch wrapper: returns { ok, data, error }, never throws.
     async function apiRequest(path, options = {}) {
