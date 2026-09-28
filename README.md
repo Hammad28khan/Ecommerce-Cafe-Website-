@@ -40,16 +40,15 @@ in a demo, or credentials can be shared on request.
 
 ## Dash board Images 
 
-_Paste the video link from GitHub's asset upload here (drag a video file into a
-new Issue's comment box, submit it, then copy the generated line — it renders
-as a playable video directly in this README on github.com). Covers the
-storefront, the combo picker modal, order tracking, and the admin dashboard._
+<img width="1280" height="695" alt="Image" src="https://github.com/user-attachments/assets/57b0fea7-0416-4ef2-b016-0d61d6cce633" />
+<img width="1280" height="695" alt="Image" src="https://github.com/user-attachments/assets/6fd5de19-f0f3-4f5e-86f3-b34a2ff9edf0" />
+<img width="1280" height="701" alt="Image" src="https://github.com/user-attachments/assets/2496bc5d-da8e-42ed-9bea-9240cf1234f5" />
+<img width="1280" height="699" alt="Image" src="https://github.com/user-attachments/assets/44da6173-8222-4be4-9bc7-80898dad85c8" />
+<img width="1280" height="687" alt="Image" src="https://github.com/user-attachments/assets/e66610d9-d10b-4de0-b36e-10dac36c622d" />
+<img width="1278" height="494" alt="Image" src="https://github.com/user-attachments/assets/7d589548-1937-4fae-8a90-c8c7104d025c" />
+<img width="1280" height="407" alt="Image" src="https://github.com/user-attachments/assets/381df3f1-c11c-4578-bf3c-2f55b156394c" />
+<img width="1277" height="643" alt="Image" src="https://github.com/user-attachments/assets/01ac4c29-7bd3-4e38-9a51-f71cc3312497" />
 
-<!--
-Example — replace with your own uploaded video link:
-
-https://github.com/user-attachments/assets/your-video-id-here
--->
 
 ## Tech stack
 
